@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game Design Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@200;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0c0c0e;
+    --surface: #111114;
+    --border: rgba(255,255,255,0.07);
+    --text: #e8e4dc;
+    --muted: rgba(232,228,220,0.45);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 200;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.4;
+  }
+
+  header {
+    text-align: center;
+    padding: 100px 24px 80px;
+    position: relative;
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    height: 48px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.15), transparent);
+  }
+
+  .eyebrow {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 400;
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin-bottom: 20px;
+  }
+
+  h1 em {
+    font-style: italic;
+    font-weight: 300;
+    color: rgba(232,228,220,0.6);
+  }
+
+  .header-desc {
+    max-width: 480px;
+    margin: 0 auto;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--muted);
+    font-weight: 200;
+  }
+
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 80px 24px 120px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+  }
+
+  @media (max-width: 700px) {
+    main { grid-template-columns: 1fr; }
+  }
+
+  .game-card {
+    position: relative;
+    overflow: hidden;
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    aspect-ratio: 4/3;
+    cursor: pointer;
+  }
+
+  .card-bg {
+    position: absolute;
+    inset: 0;
+    transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .game-card:hover .card-bg { transform: scale(1.04); }
+
+  /* Ashen Throne - volcanic orange */
+  .card-fantasy .card-bg {
+    background:
+      radial-gradient(ellipse at 30% 70%, rgba(180,60,20,0.6) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(100,30,10,0.4) 0%, transparent 50%),
+      #1a0e08;
+  }
+
+  /* Fractured Signal - alien teal/amber */
+  .card-scifi .card-bg {
+    background:
+      radial-gradient(ellipse at 70% 30%, rgba(20,120,100,0.5) 0%, transparent 55%),
+      radial-gradient(ellipse at 20% 80%, rgba(160,100,20,0.35) 0%, transparent 50%),
+      #060f0e;
+  }
+
+  /* Hollow - cold grey/blue */
+  .card-horror .card-bg {
+    background:
+      radial-gradient(ellipse at 50% 80%, rgba(30,40,60,0.8) 0%, transparent 60%),
+      radial-gradient(ellipse at 20% 20%, rgba(60,70,90,0.3) 0%, transparent 50%),
+      #080a10;
+  }
+
+  /* Veil Murders - deep sepia ink */
+  .card-mystery .card-bg {
+    background:
+      radial-gradient(ellipse at 40% 60%, rgba(80,50,20,0.6) 0%, transparent 55%),
+      radial-gradient(ellipse at 75% 25%, rgba(40,25,10,0.5) 0%, transparent 50%),
+      #0e0a05;
+  }
+
+  .card-grid-lines {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+
+  .game-card:hover .card-grid-lines { opacity: 1; }
+
+  .card-content {
+    position: absolute;
+    inset: 0;
+    padding: 36px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 60%);
+  }
+
+  .card-genre {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 400;
+    margin-bottom: 8px;
+    opacity: 0.6;
+    transition: opacity 0.3s;
+  }
+
+  .game-card:hover .card-genre { opacity: 1; }
+
+  .card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 600;
+    line-height: 1.1;
+    margin-bottom: 10px;
+  }
+
+  .card-tagline {
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: rgba(232,228,220,0.55);
+    max-width: 300px;
+    transition: color 0.3s;
+  }
+
+  .game-card:hover .card-tagline { color: rgba(232,228,220,0.8); }
+
+  .card-arrow {
+    position: absolute;
+    top: 32px;
+    right: 32px;
+    width: 36px;
+    height: 36px;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    opacity: 0;
+    transform: translate(-4px, 4px);
+    transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
+  }
+
+  .game-card:hover .card-arrow {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+
+  .card-accent-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 0;
+    transition: width 0.5s cubic-bezier(0.16,1,0.3,1);
+  }
+
+  .game-card:hover .card-accent-line { width: 100%; }
+  .card-fantasy .card-accent-line { background: linear-gradient(to right, #c0401a, #e07030); }
+  .card-scifi .card-accent-line { background: linear-gradient(to right, #0e8870, #c08020); }
+  .card-horror .card-accent-line { background: linear-gradient(to right, #2a3550, #4a6080); }
+  .card-mystery .card-accent-line { background: linear-gradient(to right, #7a5020, #c09040); }
+
+  footer {
+    text-align: center;
+    padding: 40px 24px;
+    border-top: 1px solid var(--border);
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  /* entrance animation */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  header { animation: fadeUp 0.8s ease both; }
+  .game-card:nth-child(1) { animation: fadeUp 0.6s 0.2s ease both; }
+  .game-card:nth-child(2) { animation: fadeUp 0.6s 0.35s ease both; }
+  .game-card:nth-child(3) { animation: fadeUp 0.6s 0.5s ease both; }
+  .game-card:nth-child(4) { animation: fadeUp 0.6s 0.65s ease both; }
+</style>
+</head>
+<body>
+
+<header>
+  <p class="eyebrow">Game Design Portfolio</p>
+  <h1>Four Worlds.<br><em>One Vision.</em></h1>
+  <p class="header-desc">Original game design documents — each a complete world with its own rules, factions, and moral weight.</p>
+</header>
+
+<main>
+  <a class="game-card card-fantasy" href="ashen-throne.html">
+    <div class="card-bg"></div>
+    <div class="card-grid-lines"></div>
+    <div class="card-content">
+      <p class="card-genre">High Fantasy RPG</p>
+      <h2 class="card-title">Ashen Throne</h2>
+      <p class="card-tagline">Rise from demon foot soldier to Grand Marshal in a world where your people are the oppressed.</p>
+    </div>
+    <div class="card-arrow">↗</div>
+    <div class="card-accent-line"></div>
+  </a>
+
+  <a class="game-card card-scifi" href="fractured-signal.html">
+    <div class="card-bg"></div>
+    <div class="card-grid-lines"></div>
+    <div class="card-content">
+      <p class="card-genre">Post-Apocalyptic Sci-Fi</p>
+      <h2 class="card-title">Fractured Signal</h2>
+      <p class="card-tagline">Earth made first contact. The reply was a war fleet. Survive the aftermath underground.</p>
+    </div>
+    <div class="card-arrow">↗</div>
+    <div class="card-accent-line"></div>
+  </a>
+
+  <a class="game-card card-horror" href="hollow.html">
+    <div class="card-bg"></div>
+    <div class="card-grid-lines"></div>
+    <div class="card-content">
+      <p class="card-genre">Modern Urban Horror</p>
+      <h2 class="card-title">Hollow</h2>
+      <p class="card-tagline">Voss City has been sealed. Something moved through it one night and left behind a silence that isn't quite silence.</p>
+    </div>
+    <div class="card-arrow">↗</div>
+    <div class="card-accent-line"></div>
+  </a>
+
+  <a class="game-card card-mystery" href="veil-murders.html">
+    <div class="card-bg"></div>
+    <div class="card-grid-lines"></div>
+    <div class="card-content">
+      <p class="card-genre">Victorian Gothic Mystery</p>
+      <h2 class="card-title">The Veil Murders</h2>
+      <p class="card-tagline">A serial killer in fog-choked Dunhallow — until Edith realizes there is no single killer at all.</p>
+    </div>
+    <div class="card-arrow">↗</div>
+    <div class="card-accent-line"></div>
+  </a>
+</main>
+
+<footer>Game Design Documents &nbsp;·&nbsp; Original Worlds &nbsp;·&nbsp; All Rights Reserved</footer>
+
+</body>
+</html>
