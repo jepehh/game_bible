@@ -27,7 +27,6 @@
     overflow-x: hidden;
   }
 
-  /* grain overlay */
   body::before {
     content: '';
     position: fixed;
@@ -38,7 +37,6 @@
     opacity: 0.35;
   }
 
-  /* ── HEADER ── */
   header {
     text-align: center;
     padding: 120px 24px 96px;
@@ -88,7 +86,6 @@
     font-weight: 200;
   }
 
-  /* ── MAIN GRID ── */
   main {
     max-width: 1160px;
     margin: 0 auto;
@@ -102,7 +99,6 @@
     main { grid-template-columns: 1fr; padding: 60px 0 80px; }
   }
 
-  /* ── CARD ── */
   .game-card {
     position: relative;
     overflow: hidden;
@@ -114,7 +110,6 @@
     cursor: pointer;
   }
 
-  /* actual game image */
   .card-photo {
     position: absolute;
     inset: 0;
@@ -127,13 +122,11 @@
 
   .game-card:hover .card-photo { transform: scale(1.07); }
 
-  /* per-game photo treatment */
   .card-fantasy .card-photo  { filter: brightness(0.48) saturate(0.88); }
   .card-scifi   .card-photo  { filter: brightness(0.38) saturate(0.75); }
   .card-horror  .card-photo  { filter: brightness(0.34) saturate(0.5);  }
   .card-mystery .card-photo  { filter: brightness(0.38) saturate(0.7) sepia(0.18); }
 
-  /* per-game atmospheric colour tint */
   .card-tint {
     position: absolute;
     inset: 0;
@@ -162,7 +155,6 @@
       radial-gradient(ellipse at 72% 28%, rgba(65,40,12,0.22) 0%, transparent 50%);
   }
 
-  /* bottom fade for text legibility */
   .card-vignette {
     position: absolute;
     inset: 0;
@@ -176,7 +168,6 @@
     pointer-events: none;
   }
 
-  /* ── CARD CONTENT ── */
   .card-content {
     position: absolute;
     bottom: 0; left: 0; right: 0;
@@ -196,66 +187,17 @@
 
   .game-card:hover .card-genre { opacity: 1; }
 
-  /* per-game genre labels */
-  .card-fantasy .card-genre  {
-    font-family: 'Cinzel', serif;
-    color: #e07028;
-    letter-spacing: 0.18em;
-  }
-  .card-scifi .card-genre {
-    font-family: 'Share Tech Mono', monospace;
-    color: #00d0aa;
-    letter-spacing: 0.16em;
-  }
-  .card-horror .card-genre {
-    font-family: 'Outfit', sans-serif;
-    color: #6a90b8;
-    letter-spacing: 0.28em;
-  }
-  .card-mystery .card-genre {
-    font-family: 'Playfair Display', serif;
-    font-style: italic;
-    color: #c89030;
-    font-size: 0.7rem;
-    letter-spacing: 0.13em;
-  }
+  .card-fantasy .card-genre  { font-family: 'Cinzel', serif; color: #e07028; letter-spacing: 0.18em; }
+  .card-scifi .card-genre    { font-family: 'Share Tech Mono', monospace; color: #00d0aa; letter-spacing: 0.16em; }
+  .card-horror .card-genre   { font-family: 'Outfit', sans-serif; color: #6a90b8; letter-spacing: 0.28em; }
+  .card-mystery .card-genre  { font-family: 'Playfair Display', serif; font-style: italic; color: #c89030; font-size: 0.7rem; letter-spacing: 0.13em; }
 
-  /* per-game title fonts */
-  .card-title {
-    display: block;
-    line-height: 1.05;
-    margin-bottom: 10px;
-  }
+  .card-title { display: block; line-height: 1.05; margin-bottom: 10px; }
 
-  .card-fantasy .card-title {
-    font-family: 'Cinzel', serif;
-    font-size: clamp(1.7rem, 2.8vw, 2.3rem);
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    color: var(--text);
-  }
-  .card-scifi .card-title {
-    font-family: 'Outfit', sans-serif;
-    font-size: clamp(1.6rem, 2.8vw, 2.2rem);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: -0.01em;
-    color: var(--text);
-  }
-  .card-horror .card-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(2.4rem, 3.8vw, 3.2rem);
-    font-weight: 400;
-    letter-spacing: -0.025em;
-    color: var(--text);
-  }
-  .card-mystery .card-title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(1.6rem, 2.8vw, 2.2rem);
-    font-weight: 900;
-    letter-spacing: -0.01em;
-    color: var(--text);
-  }
+  .card-fantasy .card-title  { font-family: 'Cinzel', serif; font-size: clamp(1.7rem, 2.8vw, 2.3rem); font-weight: 600; letter-spacing: 0.02em; color: var(--text); }
+  .card-scifi .card-title    { font-family: 'Outfit', sans-serif; font-size: clamp(1.6rem, 2.8vw, 2.2rem); font-weight: 700; text-transform: uppercase; letter-spacing: -0.01em; color: var(--text); }
+  .card-horror .card-title   { font-family: 'DM Serif Display', serif; font-size: clamp(2.4rem, 3.8vw, 3.2rem); font-weight: 400; letter-spacing: -0.025em; color: var(--text); }
+  .card-mystery .card-title  { font-family: 'Playfair Display', serif; font-size: clamp(1.6rem, 2.8vw, 2.2rem); font-weight: 900; letter-spacing: -0.01em; color: var(--text); }
 
   .card-tagline {
     font-size: 0.78rem;
@@ -268,7 +210,6 @@
 
   .game-card:hover .card-tagline { color: rgba(232,228,220,0.76); }
 
-  /* ── ARROW ── */
   .card-arrow {
     position: absolute;
     top: 26px; right: 26px;
@@ -286,7 +227,6 @@
 
   .game-card:hover .card-arrow { opacity: 1; transform: translate(0,0); }
 
-  /* ── ACCENT LINE ── */
   .card-accent-line {
     position: absolute;
     bottom: 0; left: 0;
@@ -296,30 +236,55 @@
 
   .game-card:hover .card-accent-line { width: 100%; }
 
-  .card-fantasy .card-accent-line {
-    background: linear-gradient(to right, #a03412, #e07028, #a03412);
-  }
-  .card-scifi .card-accent-line {
-    background: linear-gradient(to right, #007860, #00d0aa, #007860);
-  }
-  .card-horror .card-accent-line {
-    background: linear-gradient(to right, #18283e, #5a7a9a, #18283e);
-  }
-  .card-mystery .card-accent-line {
-    background: linear-gradient(to right, #60380e, #c89030, #60380e);
-  }
+  .card-fantasy .card-accent-line  { background: linear-gradient(to right, #a03412, #e07028, #a03412); }
+  .card-scifi .card-accent-line    { background: linear-gradient(to right, #007860, #00d0aa, #007860); }
+  .card-horror .card-accent-line   { background: linear-gradient(to right, #18283e, #5a7a9a, #18283e); }
+  .card-mystery .card-accent-line  { background: linear-gradient(to right, #60380e, #c89030, #60380e); }
 
   /* ── FOOTER ── */
   footer {
     text-align: center;
-    padding: 38px 24px;
+    padding: 38px 24px 44px;
     border-top: 1px solid var(--border);
     font-size: 0.7rem;
     color: var(--muted);
     letter-spacing: 0.1em;
   }
 
-  /* ── ANIMATIONS ── */
+  .survey-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 16px;
+    font-size: 0.62rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(232,228,220,0.3);
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.07);
+    padding: 6px 16px;
+    border-radius: 20px;
+    transition: color 0.25s, border-color 0.25s, background 0.25s;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 400;
+  }
+
+  .survey-link:hover {
+    color: rgba(232,228,220,0.8);
+    border-color: rgba(255,255,255,0.18);
+    background: rgba(255,255,255,0.03);
+  }
+
+  .survey-link-dot {
+    width: 5px; height: 5px;
+    background: rgba(232,228,220,0.25);
+    border-radius: 50%;
+    transition: background 0.25s;
+    flex-shrink: 0;
+  }
+
+  .survey-link:hover .survey-link-dot { background: rgba(201,151,58,0.8); }
+
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(22px); }
     to   { opacity: 1; transform: translateY(0); }
@@ -396,7 +361,15 @@
 
 </main>
 
-<footer>Game Design Documents &nbsp;·&nbsp; Original Worlds &nbsp;·&nbsp; All Rights Reserved</footer>
+<footer>
+  Game Design Documents &nbsp;·&nbsp; Original Worlds &nbsp;·&nbsp; All Rights Reserved
+  <div>
+    <a class="survey-link" href="survey.html">
+      <span class="survey-link-dot"></span>
+      Participate in the Research Survey
+    </a>
+  </div>
+</footer>
 
 </body>
 </html>
