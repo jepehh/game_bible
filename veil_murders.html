@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Veil Murders — Game Bible</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=IM+Fell+English:ital@0;1&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #07050300;
+    --deep: #070503;
+    --surface: #0e0a06;
+    --card: #130d07;
+    --card-hover: #1a1009;
+    --sepia: #c8922a;
+    --sepia-dim: rgba(200,146,42,0.12);
+    --sepia-border: rgba(200,146,42,0.18);
+    --rust: #8a3a1a;
+    --gold: #e0b060;
+    --ink: #f0e4cc;
+    --fog: rgba(240,228,204,0.42);
+    --fog-light: rgba(240,228,204,0.65);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--deep);
+    color: var(--ink);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 300;
+    line-height: 1.8;
+    overflow-x: hidden;
+  }
+
+  /* parchment noise */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.68' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.028'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.55;
+  }
+
+  /* ── BACK LINK ── */
+  .back-link {
+    position: fixed;
+    top: 24px; left: 28px;
+    z-index: 200;
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--fog);
+    text-decoration: none;
+    letter-spacing: 0.03em;
+    transition: color 0.2s;
+  }
+  .back-link:hover { color: var(--sepia); }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    height: 100vh;
+    min-height: 640px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('images/veil_murders/ashburn.png');
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.38) saturate(0.68);
+    transform: scale(1.04);
+    transition: transform 10s ease;
+  }
+
+  .hero:hover .hero-bg { transform: scale(1.0); }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 18% 68%, rgba(195,138,38,0.10) 0%, transparent 44%),
+      radial-gradient(ellipse at 80% 40%, rgba(100,70,20,0.06) 0%, transparent 38%),
+      linear-gradient(
+        to bottom,
+        rgba(7,5,3,0.12) 0%,
+        rgba(7,5,3,0.04) 25%,
+        rgba(7,5,3,0.76) 70%,
+        rgba(7,5,3,1) 100%
+      );
+  }
+
+  /* fog drift */
+  .fog-layer {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 50% 55%, rgba(200,146,42,0.055) 0%, transparent 55%),
+      radial-gradient(ellipse at 30% 70%, rgba(160,100,20,0.03) 0%, transparent 40%);
+    pointer-events: none;
+    animation: fog-drift 10s ease-in-out infinite alternate;
+  }
+
+  @keyframes fog-drift {
+    from { transform: translateX(-12px) translateY(0);   opacity: 0.5; }
+    to   { transform: translateX(12px)  translateY(-6px); opacity: 1; }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 0 80px 72px;
+    max-width: 860px;
+  }
+
+  /* newspaper masthead rule */
+  .masthead-rule {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+
+  .masthead-line {
+    height: 1px;
+    background: linear-gradient(to right, var(--sepia), transparent);
+    opacity: 0.45;
+    flex: 0 0 50px;
+  }
+
+  .masthead-text {
+    font-family: 'IM Fell English', serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.22em;
+    color: var(--sepia);
+    text-transform: uppercase;
+    opacity: 0.8;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 8vw, 7rem);
+    font-weight: 900;
+    line-height: 0.95;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  .hero-title-italic {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.4rem, 3.5vw, 2.8rem);
+    font-weight: 400;
+    font-style: italic;
+    color: var(--sepia);
+    letter-spacing: 0.01em;
+    display: block;
+    margin-top: 8px;
+    opacity: 0.85;
+  }
+
+  .hero-dateline {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--fog);
+    margin-top: 22px;
+    letter-spacing: 0.04em;
+  }
+
+  .hero-deck {
+    max-width: 480px;
+    margin-top: 16px;
+    font-size: 1rem;
+    font-style: italic;
+    line-height: 1.75;
+    color: rgba(240,228,204,0.58);
+  }
+
+  .hero-rule-bottom {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(200,146,42,0.25), transparent);
+  }
+
+  /* ── CONTENT ── */
+  .content {
+    max-width: 1060px;
+    margin: 0 auto;
+    padding: 80px 80px 120px;
+    position: relative;
+    z-index: 1;
+  }
+
+  @media (max-width: 768px) {
+    .hero-content { padding: 0 24px 56px; }
+    .content { padding: 60px 20px 80px; }
+  }
+
+  .section { margin-bottom: 80px; }
+
+  .section-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--sepia);
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    opacity: 0.85;
+  }
+
+  .section-label::before {
+    content: '†';
+    font-size: 0.7rem;
+    opacity: 0.6;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, var(--sepia-border), transparent);
+  }
+
+  .prose {
+    font-size: 1rem;
+    color: rgba(240,228,204,0.72);
+    line-height: 1.9;
+  }
+
+  /* ── CASE FILE BOX ── */
+  .case-file {
+    border: 1px solid var(--sepia-border);
+    border-left: 3px solid var(--rust);
+    background: linear-gradient(to right, rgba(138,58,26,0.06), transparent);
+    padding: 24px 28px;
+    margin: 32px 0;
+    position: relative;
+  }
+
+  .case-file::before {
+    content: 'CASE FILE';
+    position: absolute;
+    top: -8px; left: 20px;
+    background: var(--deep);
+    font-family: 'Playfair Display', serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.22em;
+    color: var(--rust);
+    padding: 0 8px;
+    text-transform: uppercase;
+    opacity: 0.9;
+  }
+
+  .case-file p {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: rgba(240,228,204,0.72);
+    line-height: 1.8;
+  }
+
+  /* ── EDITH HERO SPLIT ── */
+  .edith-split {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 0;
+    border: 1px solid var(--sepia-border);
+    overflow: hidden;
+    margin-bottom: 80px;
+  }
+
+  .edith-img {
+    width: 100%;
+    height: 100%;
+    min-height: 500px;
+    object-fit: cover;
+    object-position: center top;
+    filter: brightness(0.64) saturate(0.82) sepia(0.28);
+    display: block;
+    transition: filter 0.5s;
+  }
+
+  .edith-split:hover .edith-img { filter: brightness(0.72) saturate(0.85) sepia(0.1); }
+
+  .edith-body {
+    padding: 44px 40px;
+    background: var(--card);
+    border-left: 1px solid var(--sepia-border);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 22px;
+  }
+
+  .edith-role {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    color: var(--sepia);
+    opacity: 0.75;
+    text-transform: uppercase;
+  }
+
+  .edith-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--ink);
+  }
+
+  .edith-desc {
+    font-size: 0.95rem;
+    color: var(--fog);
+    line-height: 1.8;
+  }
+
+  .edith-files {
+    border-top: 1px solid var(--sepia-border);
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .file-row {
+    display: flex;
+    gap: 16px;
+    font-size: 0.82rem;
+  }
+
+  .file-key {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--sepia);
+    opacity: 0.65;
+    min-width: 90px;
+    padding-top: 2px;
+  }
+
+  .file-val {
+    color: var(--fog);
+    font-style: italic;
+    font-family: 'IM Fell English', serif;
+  }
+
+  @media (max-width: 700px) {
+    .edith-split { grid-template-columns: 1fr; }
+    .edith-img { min-height: 300px; height: 300px; }
+  }
+
+  /* ── FULL BLEED ── */
+  .full-bleed {
+    width: calc(100% + 160px);
+    margin-left: -80px;
+    height: 480px;
+    object-fit: cover;
+    object-position: center;
+    filter: brightness(0.45) saturate(0.68) sepia(0.35);
+    display: block;
+  }
+
+  .full-bleed-caption {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    color: var(--fog);
+    text-align: center;
+    padding: 14px 0 72px;
+    opacity: 0.55;
+    border-bottom: 1px solid var(--sepia-border);
+    margin-bottom: 80px;
+  }
+
+  @media (max-width: 768px) {
+    .full-bleed { width: calc(100% + 40px); margin-left: -20px; height: 260px; }
+  }
+
+  /* ── LOCATION GRID ── */
+  .loc-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--sepia-border);
+    border: 1px solid var(--sepia-border);
+  }
+
+  @media (max-width: 768px) { .loc-grid { grid-template-columns: 1fr; } }
+
+  .loc-card {
+    background: var(--card);
+    overflow: hidden;
+    transition: background 0.25s;
+  }
+
+  .loc-card:hover { background: var(--card-hover); }
+
+  .loc-img {
+    width: 100%;
+    height: 170px;
+    object-fit: cover;
+    object-position: center;
+    filter: brightness(0.45) saturate(0.65) sepia(0.25);
+    display: block;
+    transition: filter 0.45s, transform 0.5s;
+  }
+
+  .loc-card:hover .loc-img {
+    filter: brightness(0.6) saturate(0.8) sepia(0.1);
+    transform: scale(1.03);
+  }
+
+  .loc-body { padding: 18px 20px 22px; }
+
+  .loc-numeral {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 0.65rem;
+    color: var(--sepia);
+    opacity: 0.55;
+    margin-bottom: 4px;
+    letter-spacing: 0.08em;
+  }
+
+  .loc-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+
+  .loc-meta {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 0.7rem;
+    color: var(--fog);
+    margin-bottom: 8px;
+    opacity: 0.7;
+  }
+
+  .loc-desc {
+    font-size: 0.84rem;
+    color: rgba(240,228,204,0.52);
+    line-height: 1.65;
+  }
+
+  /* ── SUSPECTS / CHARACTERS ── */
+  .suspects-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--sepia-border);
+    border: 1px solid var(--sepia-border);
+    margin-bottom: 80px;
+  }
+
+  @media (max-width: 700px) { .suspects-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 420px) { .suspects-grid { grid-template-columns: 1fr; } }
+
+  .suspect-card {
+    background: var(--card);
+    overflow: hidden;
+    transition: background 0.25s;
+    position: relative;
+  }
+
+  .suspect-card:hover { background: var(--card-hover); }
+
+  .suspect-img {
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+    object-position: center top;
+    filter: brightness(0.45) saturate(0.6) sepia(0.3);
+    display: block;
+    transition: filter 0.45s, transform 0.6s;
+  }
+
+  .suspect-card:hover .suspect-img {
+    filter: brightness(0.62) saturate(0.8) sepia(0.15);
+    transform: scale(1.04);
+  }
+
+  .suspect-overlay {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 20px 18px 18px;
+    background: linear-gradient(to top, rgba(7,5,3,0.97) 0%, rgba(7,5,3,0.5) 60%, transparent 100%);
+  }
+
+  .suspect-role {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    color: var(--sepia);
+    opacity: 0.75;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+  }
+
+  .suspect-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 6px;
+    line-height: 1.2;
+  }
+
+  .suspect-desc {
+    font-size: 0.75rem;
+    color: rgba(240,228,204,0.5);
+    line-height: 1.55;
+  }
+
+  /* ── FACTION CARDS ── */
+  .faction-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--sepia-border);
+    border: 1px solid var(--sepia-border);
+  }
+
+  @media (max-width: 560px) { .faction-grid { grid-template-columns: 1fr; } }
+
+  .faction-card {
+    background: var(--card);
+    padding: 24px 26px;
+    transition: background 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .faction-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: transparent;
+    transition: background 0.3s;
+  }
+
+  .faction-card:hover { background: var(--card-hover); }
+  .faction-card:hover::after { background: var(--sepia-border); }
+
+  .faction-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 4px;
+    line-height: 1.2;
+  }
+
+  .faction-meta {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 0.72rem;
+    color: var(--fog);
+    margin-bottom: 12px;
+    opacity: 0.7;
+  }
+
+  .faction-desc {
+    font-size: 0.88rem;
+    color: rgba(240,228,204,0.55);
+    line-height: 1.7;
+  }
+
+  /* ── QUEST CARDS ── */
+  .quest-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--sepia-border);
+    border: 1px solid var(--sepia-border);
+  }
+
+  @media (max-width: 560px) { .quest-grid { grid-template-columns: 1fr; } }
+
+  .quest-card {
+    background: var(--card);
+    padding: 26px 28px;
+    transition: background 0.2s;
+    position: relative;
+  }
+
+  .quest-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 0;
+    background: rgba(138,58,26,0.4);
+    transition: width 0.35s;
+  }
+
+  .quest-card:hover { background: var(--card-hover); }
+  .quest-card:hover::before { width: 2px; }
+
+  .quest-numeral {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 0.62rem;
+    color: var(--sepia);
+    opacity: 0.6;
+    margin-bottom: 8px;
+    letter-spacing: 0.1em;
+  }
+
+  .quest-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+
+  .quest-desc {
+    font-size: 0.88rem;
+    color: rgba(240,228,204,0.55);
+    line-height: 1.7;
+  }
+
+  /* ── DIFFICULTY TABLE ── */
+  .diff-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid var(--sepia-border);
+  }
+
+  .diff-table th {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--sepia);
+    opacity: 0.7;
+    padding: 14px 22px;
+    text-align: left;
+    border-bottom: 1px solid var(--sepia-border);
+    font-weight: 400;
+    background: var(--card);
+  }
+
+  .diff-table td {
+    padding: 16px 22px;
+    border-bottom: 1px solid var(--sepia-border);
+    font-size: 0.88rem;
+    color: rgba(240,228,204,0.6);
+    line-height: 1.65;
+    vertical-align: top;
+    background: var(--surface);
+    font-family: 'IM Fell English', serif;
+  }
+
+  .diff-table tr:last-child td { border-bottom: none; }
+
+  .diff-table td:first-child {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 0.88rem;
+    color: var(--gold);
+    white-space: nowrap;
+    width: 110px;
+    font-style: normal;
+  }
+
+  /* ── RESTRICTIONS ── */
+  .restriction-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    border: 1px solid var(--sepia-border);
+    padding: 30px 36px;
+    background: var(--card);
+  }
+
+  .restriction-list li {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 0.92rem;
+    color: var(--fog);
+    padding-left: 22px;
+    position: relative;
+    line-height: 1.7;
+    opacity: 0.8;
+  }
+
+  .restriction-list li::before {
+    content: '†';
+    position: absolute;
+    left: 0;
+    color: var(--rust);
+    font-style: normal;
+    font-size: 0.75rem;
+    top: 3px;
+    opacity: 0.8;
+  }
+
+  /* ── FOOTER ── */
+  .page-footer {
+    text-align: center;
+    padding: 44px 24px 60px;
+    border-top: 1px solid var(--sepia-border);
+    position: relative;
+  }
+
+  .footer-ornament {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: var(--sepia);
+    opacity: 0.2;
+    margin-bottom: 10px;
+    letter-spacing: 0.3em;
+  }
+
+  .footer-text {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    color: var(--fog);
+    opacity: 0.4;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .masthead-rule { animation: fadeUp 0.5s 0.1s both; }
+  .hero-title    { animation: fadeUp 0.8s 0.25s both; }
+  .hero-dateline { animation: fadeUp 0.5s 0.5s both; }
+  .hero-deck     { animation: fadeUp 0.5s 0.65s both; }
+</style>
+</head>
+<body>
+
+<a class="back-link" href="index.html">← All Games</a>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="fog-layer"></div>
+
+  <div class="hero-content">
+    <div class="masthead-rule">
+      <div class="masthead-line"></div>
+      <span class="masthead-text">Game Bible &nbsp;·&nbsp; Victorian Gothic Mystery &nbsp;·&nbsp; Dunhallow, 1887</span>
+    </div>
+    <h1 class="hero-title">
+      The Veil<br>Murders
+      <span class="hero-title-italic">A Mystery of Ink, Obsession & Organised Evil</span>
+    </h1>
+    <p class="hero-dateline">Fog-choked Dunhallow &nbsp;·&nbsp; Industrial Port City &nbsp;·&nbsp; Circa 1887</p>
+    <p class="hero-deck">What begins as a single grisly murder unravels into something Edith was never meant to find: a coordinated network of killers acting under a shared doctrine.</p>
+  </div>
+  <div class="hero-rule-bottom"></div>
+</div>
+
+<!-- ── CONTENT ── -->
+<div class="content">
+
+  <!-- PREMISE -->
+  <div class="section">
+    <p class="section-label">The Case</p>
+    <p class="prose">A merchant found posed, eyes sewn shut. A symbol cut into cloth near the body. The Dunhallow Metropolitan Police call it the work of a single killer. Edith Crane, investigative correspondent for <em>The Dunhallow Sentinel</em>, is not convinced.</p>
+    <div class="case-file">
+      <p>There is no single killer. The Veil assigns each murder to a different member. The symbol is a shared signature — a collective mark. Edith must expose a distributed murder doctrine operating inside the city's institutions before its members realise she knows — and before the next name on their list is hers.</p>
+    </div>
+    <p class="prose">The deeper Edith goes, the more the doctrine's logic begins to seem internally coherent. The horror is not that it's irrational — it's that it isn't.</p>
+  </div>
+
+  <!-- EDITH SPLIT -->
+  <div class="edith-split">
+    <img class="edith-img" src="images/veil_murders/edith.png" alt="Edith Crane">
+    <div class="edith-body">
+      <p class="edith-role">// Investigative Correspondent — The Dunhallow Sentinel</p>
+      <p class="edith-name">Edith Crane</p>
+      <p class="edith-desc">Sharp, methodical, and operating in a city that does not want her to succeed. Edith has no authority, no badge, and no allies she can fully trust. What she has is ink, instinct, and an inability to leave a question unanswered.</p>
+      <div class="edith-files">
+        <div class="file-row">
+          <span class="file-key">Employer</span>
+          <span class="file-val">The Dunhallow Sentinel, Aldgate Row</span>
+        </div>
+        <div class="file-row">
+          <span class="file-key">Tools</span>
+          <span class="file-val">Contacts, observation, press credentials</span>
+        </div>
+        <div class="file-row">
+          <span class="file-key">Restriction</span>
+          <span class="file-val">No violence. No supernatural. Only truth.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOCATIONS -->
+  <div class="section">
+    <p class="section-label">Important Locations</p>
+    <div class="loc-grid">
+      <div class="loc-card">
+        <img class="loc-img" src="images/veil_murders/aldgate.png" alt="The Sentinel Building">
+        <div class="loc-body">
+          <p class="loc-numeral">I</p>
+          <p class="loc-name">The Sentinel Building</p>
+          <p class="loc-meta">Aldgate Row · Edith's base of operations</p>
+          <p class="loc-desc">The pressroom never sleeps. Leads arrive here; so do threats.</p>
+        </div>
+      </div>
+      <div class="loc-card">
+        <img class="loc-img" src="images/veil_murders/ashburn.png" alt="The Ashburn Docks">
+        <div class="loc-body">
+          <p class="loc-numeral">II</p>
+          <p class="loc-name">The Ashburn Docks</p>
+          <p class="loc-meta">Industrial waterfront · Every victim had business here</p>
+          <p class="loc-desc">Transient workers, sealed cargo, and a lockmaster who sees everything but talks to no one.</p>
+        </div>
+      </div>
+      <div class="loc-card">
+        <img class="loc-img" src="images/veil_murders/greymire.png" alt="Greymire Hospital">
+        <div class="loc-body">
+          <p class="loc-numeral">III</p>
+          <p class="loc-name">Greymire Hospital</p>
+          <p class="loc-meta">Private asylum · Northern hill</p>
+          <p class="loc-desc">Two victims were former patients. Dr. Pell uses methods no one fully understands.</p>
+        </div>
+      </div>
+      <div class="loc-card">
+        <img class="loc-img" src="images/veil_murders/cartwright.png" alt="The Cartwright Club">
+        <div class="loc-body">
+          <p class="loc-numeral">IV</p>
+          <p class="loc-name">The Cartwright Club</p>
+          <p class="loc-meta">Gentleman's dining society · Magistrates & bankers</p>
+          <p class="loc-desc">Its private records room holds the thread Edith is not supposed to pull.</p>
+        </div>
+      </div>
+      <div class="loc-card">
+        <img class="loc-img" src="images/veil_murders/undercroft.png" alt="The Undercroft">
+        <div class="loc-body">
+          <p class="loc-numeral">V</p>
+          <p class="loc-name">The Undercroft</p>
+          <p class="loc-meta">Sealed tunnels · Old Dunhallow</p>
+          <p class="loc-desc">Someone has been using them recently. The maps don't match what Edith finds.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KEY FIGURES -->
+  <div class="section">
+    <p class="section-label">Key Figures</p>
+    <div class="suspects-grid">
+      <div class="suspect-card">
+        <img class="suspect-img" src="images/veil_murders/harwick.png" alt="Harwick Foss">
+        <div class="suspect-overlay">
+          <p class="suspect-role">Editor-in-Chief</p>
+          <p class="suspect-name">Harwick Foss</p>
+          <p class="suspect-desc">Supportive but frightened. Knows more than he says.</p>
+        </div>
+      </div>
+      <div class="suspect-card">
+        <img class="suspect-img" src="images/veil_murders/aldous.png" alt="Detective Aldous Cray">
+        <div class="suspect-overlay">
+          <p class="suspect-role">Detective Sergeant</p>
+          <p class="suspect-name">Aldous Cray</p>
+          <p class="suspect-desc">Genuinely trying to solve the murders. Edith's uneasy ally.</p>
+        </div>
+      </div>
+      <div class="suspect-card">
+        <img class="suspect-img" src="images/veil_murders/pell.png" alt="Dr. Pell">
+        <div class="suspect-overlay">
+          <p class="suspect-role">Medical Director</p>
+          <p class="suspect-name">Dr. Pell</p>
+          <p class="suspect-desc">Uses methods no one fully understands. Unsettlingly calm.</p>
+        </div>
+      </div>
+      <div class="suspect-card">
+        <img class="suspect-img" src="images/veil_murders/doyle.png" alt="Doyle the Lockmaster">
+        <div class="suspect-overlay">
+          <p class="suspect-role">The Lockmaster</p>
+          <p class="suspect-name">Doyle</p>
+          <p class="suspect-desc">Sees everything at the docks. Talks to no one. Responds to respect.</p>
+        </div>
+      </div>
+      <div class="suspect-card">
+        <img class="suspect-img" src="images/veil_murders/veil.png" alt="A Veil Member">
+        <div class="suspect-overlay">
+          <p class="suspect-role">Unknown Affiliation</p>
+          <p class="suspect-name">A Veil Member</p>
+          <p class="suspect-desc">Could be anyone. Chillingly ordinary. Bound by The Passage.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FULL BLEED — GREYMIRE -->
+  <img class="full-bleed" src="images/veil_murders/greymire.png" alt="Greymire Hospital">
+  <p class="full-bleed-caption">— Greymire Hospital — private asylum — two victims were former patients — Dr. Pell's methods remain unreviewed —</p>
+
+  <!-- FACTIONS -->
+  <div class="section">
+    <p class="section-label">Factions & Networks</p>
+    <div class="faction-grid">
+      <div class="faction-card">
+        <p class="faction-name">The Veil</p>
+        <p class="faction-meta">Central antagonist · Not a cult — a doctrine</p>
+        <p class="faction-desc">Members drawn from different classes, bound by a shared written creed called <em>The Passage</em> which justifies coordinated killing as social correction. No single leader — only a rotating Scribe.</p>
+      </div>
+      <div class="faction-card">
+        <p class="faction-name">Dunhallow Metropolitan Police</p>
+        <p class="faction-meta">Morley Division · Compromised by proximity</p>
+        <p class="faction-desc">Not corrupt by design, but several officers owe favours to Cartwright Club members. Cray is the exception — and that makes him valuable and endangered.</p>
+      </div>
+      <div class="faction-card">
+        <p class="faction-name">The Dockworkers' Assembly</p>
+        <p class="faction-meta">Ashburn Docks · Informal labour organisation</p>
+        <p class="faction-desc">They distrust the police and the press equally. They knew the dock victims personally and hold information they won't give freely. Trust is earned slowly here.</p>
+      </div>
+      <div class="faction-card">
+        <p class="faction-name">Edith's Source Network</p>
+        <p class="faction-meta">Fragile intelligence web across the city</p>
+        <p class="faction-desc">Informants, contacts, and reluctant witnesses scattered across Dunhallow. Any can be lost permanently if mishandled. Every relationship is an asset and a liability.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUEST TYPES -->
+  <div class="section">
+    <p class="section-label">Investigation Methods</p>
+    <div class="quest-grid">
+      <div class="quest-card">
+        <p class="quest-numeral">Method I</p>
+        <p class="quest-name">Evidence Reconstruction</p>
+        <p class="quest-desc">Gather fragmented clues from multiple locations. Sources contradict each other — Edith must determine who is lying and why before the trail goes cold.</p>
+      </div>
+      <div class="quest-card">
+        <p class="quest-numeral">Method II</p>
+        <p class="quest-name">Source Management</p>
+        <p class="quest-desc">Approach a reluctant witness. Extract information without burning trust. Read what the contact fears and find the right lever — pressure, sympathy, or exchange.</p>
+      </div>
+      <div class="quest-card">
+        <p class="quest-numeral">Method III</p>
+        <p class="quest-name">Infiltration & Access</p>
+        <p class="quest-desc">Gain entry to a restricted location without being discovered. No violence. The tools are identity, timing, and social manoeuvre. One wrong step ends it.</p>
+      </div>
+      <div class="quest-card">
+        <p class="quest-numeral">Method IV</p>
+        <p class="quest-name">The Clock Quest</p>
+        <p class="quest-desc">A name on a page Edith shouldn't have found. A limited window to intervene or expose the next action before it happens. Failure means the death proceeds.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TONE -->
+  <div class="section">
+    <p class="section-label">Tone & Style</p>
+    <p class="prose">Dark and psychological throughout. The game never explains the horror — it reveals it incrementally. Atmosphere is built through detail: the smell of coal fog, a letter written in careful handwriting, a door that has been recently oiled. Violence is implied or discovered after the fact, never depicted in the moment. The player should feel like they are reading a case file that keeps getting worse.</p>
+  </div>
+
+  <!-- DIFFICULTY -->
+  <div class="section">
+    <p class="section-label">Difficulty</p>
+    <table class="diff-table">
+      <thead>
+        <tr>
+          <th>Level</th>
+          <th>Definition</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Easy</td>
+          <td>Clues are clearly flagged. Contradictions resolved with one correct answer. Witnesses volunteer key details with minimal pressure.</td>
+        </tr>
+        <tr>
+          <td>Medium</td>
+          <td>Multiple valid interpretations of evidence. Some sources lie or withhold. Wrong deductions have narrative consequences that must be corrected.</td>
+        </tr>
+        <tr>
+          <td>Hard</td>
+          <td>No clue flags. False leads are indistinguishable from true ones. Missed evidence is gone permanently. The Veil adapts to Edith's actions.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<div class="page-footer">
+  <div class="footer-ornament">† &nbsp; † &nbsp; †</div>
+  <p class="footer-text">The Veil Murders &nbsp;·&nbsp; Game Bible v1.0 &nbsp;·&nbsp; Dunhallow, 1887 &nbsp;·&nbsp; All Rights Reserved</p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fractured Signal — Game Bible</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:wght@200;300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #020808;
+    --surface: #04100f;
+    --card: #060f0d;
+    --card-hover: #091a17;
+    --teal: #00d0aa;
+    --teal-dim: rgba(0,208,170,0.13);
+    --teal-border: rgba(0,208,170,0.22);
+    --amber: #e89828;
+    --amber-dim: rgba(232,152,40,0.1);
+    --red: #e04030;
+    --text: #b8d8d4;
+    --muted: rgba(184,216,212,0.45);
+    --border: rgba(0,208,170,0.13);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 300;
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+
+  /* scanlines */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.07) 2px,
+      rgba(0,0,0,0.07) 4px
+    );
+    pointer-events: none;
+    z-index: 998;
+  }
+
+  /* ── BACK LINK ── */
+  .back-link {
+    position: fixed;
+    top: 20px; left: 24px;
+    z-index: 200;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.12em;
+    transition: color 0.2s;
+  }
+  .back-link:hover { color: var(--teal); }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    height: 100vh;
+    min-height: 640px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('images/fractured_signal/ashline.png');
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.42) saturate(0.8);
+    transform: scale(1.04);
+    transition: transform 10s ease;
+  }
+
+  .hero:hover .hero-bg { transform: scale(1.0); }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(2,8,8,0.1) 0%,
+      rgba(2,8,8,0.05) 30%,
+      rgba(2,8,8,0.8) 75%,
+      rgba(2,8,8,1) 100%
+    );
+  }
+
+  /* teal grid overlay */
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(13,191,154,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(13,191,154,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+  }
+
+  /* animated signal pulse */
+  .signal-ring {
+    position: absolute;
+    top: 30%;
+    right: 15%;
+    width: 300px;
+    height: 300px;
+    border: 1px solid rgba(0,208,170,0.22);
+    border-radius: 50%;
+    animation: ring-pulse 3s ease-in-out infinite;
+    pointer-events: none;
+    box-shadow: 0 0 20px rgba(0,208,170,0.06) inset;
+  }
+
+  .signal-ring:nth-child(2) {
+    width: 520px; height: 520px;
+    animation-delay: 0.8s;
+    border-color: rgba(0,208,170,0.12);
+  }
+
+  .signal-ring:nth-child(3) {
+    width: 740px; height: 740px;
+    animation-delay: 1.6s;
+    border-color: rgba(0,208,170,0.06);
+  }
+
+  @keyframes ring-pulse {
+    0%, 100% { opacity: 0; transform: scale(0.95); }
+    50%       { opacity: 1; transform: scale(1); }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 0 80px 72px;
+  }
+
+  .hero-log {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--teal);
+    letter-spacing: 0.18em;
+    margin-bottom: 20px;
+    opacity: 0.7;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .hero-log::before {
+    content: '';
+    display: inline-block;
+    width: 6px; height: 6px;
+    background: var(--teal);
+    border-radius: 50%;
+    box-shadow: 0 0 8px 3px rgba(0,208,170,0.5);
+    animation: blink 1.2s step-end infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+  }
+
+  .hero-title {
+    font-size: clamp(3.5rem, 10vw, 8.5rem);
+    font-weight: 700;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    color: var(--text);
+    position: relative;
+  }
+
+  .hero-title .outline {
+    display: block;
+    -webkit-text-stroke: 1px var(--teal);
+    color: transparent;
+    filter: drop-shadow(0 0 20px rgba(13,191,154,0.3));
+  }
+
+  .hero-tagline {
+    max-width: 500px;
+    margin-top: 24px;
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 0;
+    margin-top: 36px;
+    border: 1px solid var(--teal-border);
+    width: fit-content;
+  }
+
+  .stat {
+    padding: 12px 24px;
+    border-right: 1px solid var(--teal-border);
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .stat:last-child { border-right: none; }
+
+  .stat-key {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.18em;
+    color: var(--teal);
+    opacity: 0.6;
+    text-transform: uppercase;
+  }
+
+  .stat-val {
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--text);
+  }
+
+  .hero-rule {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--teal), transparent);
+    opacity: 0.25;
+  }
+
+  /* ── CONTENT ── */
+  .content {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 80px 80px 120px;
+    position: relative;
+    z-index: 1;
+  }
+
+  @media (max-width: 768px) {
+    .hero-content { padding: 0 24px 56px; }
+    .content { padding: 60px 20px 80px; }
+    .hero-stats { flex-wrap: wrap; }
+  }
+
+  .section { margin-bottom: 80px; }
+
+  .section-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+    color: var(--teal);
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0.9;
+  }
+
+  .section-label::before { content: '//'; opacity: 0.45; }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, var(--teal-border), transparent);
+  }
+
+  .prose {
+    font-size: 1rem;
+    font-weight: 300;
+    color: rgba(184,216,212,0.72);
+    line-height: 1.8;
+  }
+
+  /* ── TRANSMISSION BOX ── */
+  .transmission {
+    border: 1px solid var(--teal-border);
+    background: var(--teal-dim);
+    padding: 24px 28px;
+    margin: 32px 0;
+    position: relative;
+  }
+
+  .transmission::before {
+    content: 'TRANSMISSION';
+    position: absolute;
+    top: -8px; left: 16px;
+    background: var(--bg);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    color: var(--teal);
+    padding: 0 8px;
+  }
+
+  .transmission p {
+    font-size: 0.95rem;
+    color: rgba(184,216,212,0.7);
+    line-height: 1.75;
+    font-style: italic;
+  }
+
+  /* ── PLAYER SPLIT ── */
+  .player-split {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 0;
+    border: 1px solid var(--teal-border);
+    overflow: hidden;
+    margin-bottom: 80px;
+  }
+
+  .player-img {
+    width: 100%;
+    height: 100%;
+    min-height: 460px;
+    object-fit: cover;
+    object-position: center top;
+    filter: brightness(0.6) saturate(0.8);
+    display: block;
+    transition: filter 0.4s;
+  }
+
+  .player-split:hover .player-img { filter: brightness(0.75) saturate(0.9); }
+
+  .player-body {
+    padding: 40px 36px;
+    background: var(--card);
+    border-left: 1px solid var(--teal-border);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .player-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: var(--teal);
+    opacity: 0.7;
+    text-transform: uppercase;
+  }
+
+  .player-name {
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text);
+    line-height: 1.1;
+  }
+
+  .player-desc {
+    font-size: 0.95rem;
+    color: var(--muted);
+    line-height: 1.75;
+  }
+
+  .player-specs {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border-top: 1px solid var(--teal-border);
+    padding-top: 20px;
+  }
+
+  .spec-row {
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+    font-size: 0.82rem;
+  }
+
+  .spec-key {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.14em;
+    color: var(--teal);
+    opacity: 0.6;
+    min-width: 80px;
+    text-transform: uppercase;
+  }
+
+  .spec-val { color: rgba(184,216,212,0.7); }
+
+  @media (max-width: 700px) {
+    .player-split { grid-template-columns: 1fr; }
+    .player-img { min-height: 280px; height: 280px; }
+  }
+
+  /* ── FULL BLEED ── */
+  .full-bleed {
+    width: calc(100% + 160px);
+    margin-left: -80px;
+    height: 500px;
+    object-fit: cover;
+    object-position: center;
+    filter: brightness(0.55) saturate(0.75);
+    display: block;
+    margin-bottom: 0;
+  }
+
+  .full-bleed-caption {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-align: center;
+    text-transform: uppercase;
+    padding: 16px 0 72px;
+    border-bottom: 1px solid var(--teal-border);
+    margin-bottom: 80px;
+    opacity: 0.6;
+  }
+
+  @media (max-width: 768px) {
+    .full-bleed { width: calc(100% + 40px); margin-left: -20px; height: 280px; }
+  }
+
+  /* ── LOCATION GRID ── */
+  .loc-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--teal-border);
+    border: 1px solid var(--teal-border);
+  }
+
+  @media (max-width: 768px) { .loc-grid { grid-template-columns: 1fr; } }
+
+  .loc-card {
+    background: var(--card);
+    overflow: hidden;
+    transition: background 0.25s;
+    cursor: default;
+  }
+
+  .loc-card:hover { background: var(--card-hover); }
+
+  .loc-img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    object-position: center;
+    filter: brightness(0.5) saturate(0.7);
+    display: block;
+    transition: filter 0.4s, transform 0.5s;
+  }
+
+  .loc-card:hover .loc-img {
+    filter: brightness(0.65) saturate(0.85);
+    transform: scale(1.03);
+  }
+
+  .loc-body { padding: 18px 20px 22px; }
+
+  .loc-num {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    color: var(--teal);
+    opacity: 0.5;
+    margin-bottom: 4px;
+  }
+
+  .loc-name {
+    font-size: 0.88rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .loc-desc {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ── FACTION GRID ── */
+  .faction-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--teal-border);
+    border: 1px solid var(--teal-border);
+  }
+
+  @media (max-width: 600px) { .faction-grid { grid-template-columns: 1fr; } }
+
+  .faction-card {
+    background: var(--card);
+    display: flex;
+    overflow: hidden;
+    transition: background 0.2s;
+  }
+
+  .faction-card:hover { background: var(--card-hover); }
+
+  .faction-img {
+    width: 88px;
+    flex-shrink: 0;
+    object-fit: cover;
+    object-position: center top;
+    filter: brightness(0.45) saturate(0.65);
+    transition: filter 0.3s;
+  }
+
+  .faction-card:hover .faction-img { filter: brightness(0.6) saturate(0.85); }
+
+  .faction-body { padding: 18px 20px; }
+
+  .faction-tag {
+    display: inline-block;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.12em;
+    padding: 2px 8px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+
+  .tag-human  { border: 1px solid rgba(224,144,48,0.35); color: var(--amber); }
+  .tag-vael   { border: 1px solid rgba(224,64,48,0.35);  color: var(--red); }
+
+  .faction-name {
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text);
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+
+  .faction-desc {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ── QUEST CARDS ── */
+  .quest-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--teal-border);
+    border: 1px solid var(--teal-border);
+  }
+
+  @media (max-width: 600px) { .quest-grid { grid-template-columns: 1fr; } }
+
+  .quest-card {
+    background: var(--card);
+    padding: 24px 26px;
+    transition: background 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .quest-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 0; height: 2px;
+    background: var(--teal);
+    transition: width 0.4s;
+  }
+
+  .quest-card:hover { background: var(--card-hover); }
+  .quest-card:hover::after { width: 100%; }
+
+  .quest-type {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.18em;
+    color: var(--teal);
+    opacity: 0.6;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  .quest-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+
+  .quest-desc {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+
+  /* ── VAEL SPLIT ── */
+  .vael-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--teal-border);
+    border: 1px solid var(--teal-border);
+    margin-bottom: 80px;
+  }
+
+  @media (max-width: 700px) { .vael-split { grid-template-columns: 1fr; } }
+
+  .vael-panel {
+    position: relative;
+    overflow: hidden;
+    min-height: 420px;
+  }
+
+  .vael-panel-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    filter: brightness(0.45) saturate(0.65);
+    display: block;
+    transition: filter 0.4s, transform 0.6s;
+    position: absolute;
+    inset: 0;
+  }
+
+  .vael-panel:hover .vael-panel-img {
+    filter: brightness(0.6) saturate(0.8);
+    transform: scale(1.03);
+  }
+
+  .vael-panel-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(2,8,8,0.95) 0%, rgba(2,8,8,0.3) 60%);
+  }
+
+  .vael-panel-body {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 28px 26px;
+    z-index: 2;
+  }
+
+  .vael-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.16em;
+    padding: 3px 10px;
+    border: 1px solid rgba(224,64,48,0.4);
+    color: var(--red);
+    display: inline-block;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+
+  .vael-name {
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+
+  .vael-desc {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ── DIFFICULTY ── */
+  .diff-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--teal-border);
+    border: 1px solid var(--teal-border);
+  }
+
+  @media (max-width: 600px) { .diff-grid { grid-template-columns: 1fr; } }
+
+  .diff-cell {
+    background: var(--card);
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .diff-cell::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+  }
+
+  .diff-surviving::before { background: #4ab870; }
+  .diff-enduring::before  { background: var(--amber); }
+  .diff-remnant::before   { background: var(--red); }
+
+  .diff-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .diff-surviving .diff-label { color: #4ab870; }
+  .diff-enduring  .diff-label { color: var(--amber); }
+  .diff-remnant   .diff-label { color: var(--red); }
+
+  .diff-desc {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+
+  /* ── RESTRICTIONS ── */
+  .restriction-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    border: 1px solid var(--teal-border);
+    padding: 28px 32px;
+    background: var(--card);
+  }
+
+  .restriction-list li {
+    font-size: 0.9rem;
+    color: var(--muted);
+    padding-left: 22px;
+    position: relative;
+    line-height: 1.65;
+  }
+
+  .restriction-list li::before {
+    content: '>';
+    position: absolute;
+    left: 0;
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--teal);
+    opacity: 0.55;
+  }
+
+  /* ── FOOTER ── */
+  .page-footer {
+    text-align: center;
+    padding: 40px 24px 56px;
+    border-top: 1px solid var(--teal-border);
+  }
+
+  .footer-text {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.22em;
+    color: var(--muted);
+    text-transform: uppercase;
+    opacity: 0.4;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes titleGlitch {
+    0%, 91%, 100% { transform: none; }
+    92%  { transform: translate(-3px, 0) skewX(-2deg); opacity: 0.88; }
+    93%  { transform: translate( 3px, 0); opacity: 1; }
+    94%  { transform: none; }
+    96%  { transform: translate(-2px, 1px); opacity: 0.92; }
+    97%  { transform: none; }
+  }
+
+  .hero-log     { animation: fadeUp 0.5s 0.1s both; }
+  .hero-title   { animation: fadeUp 0.7s 0.25s both, titleGlitch 9s 2.5s infinite; }
+  .hero-tagline { animation: fadeUp 0.5s 0.45s both; }
+  .hero-stats   { animation: fadeUp 0.5s 0.6s both; }
+</style>
+</head>
+<body>
+
+<a class="back-link" href="index.html">← BACK</a>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-grid"></div>
+  <div class="signal-ring"></div>
+  <div class="signal-ring"></div>
+  <div class="signal-ring"></div>
+
+  <div class="hero-content">
+    <p class="hero-log">GAME_BIBLE_v1.0 // POST_APOC_SCI_FI // EARTH_2087 // CLASSIFIED</p>
+    <h1 class="hero-title">
+      Fractured<br>
+      <span class="outline">Signal</span>
+    </h1>
+    <p class="hero-tagline">Earth made first contact. The reply was a war fleet. Now the skies belong to them — and survival belongs to whoever's still breathing underground.</p>
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-key">Genre</span>
+        <span class="stat-val">Post-Apoc Sci-Fi</span>
+      </div>
+      <div class="stat">
+        <span class="stat-key">Setting</span>
+        <span class="stat-val">Earth, 2087+</span>
+      </div>
+      <div class="stat">
+        <span class="stat-key">Player</span>
+        <span class="stat-val">A Remnant</span>
+      </div>
+      <div class="stat">
+        <span class="stat-key">Tone</span>
+        <span class="stat-val">Grim / Grounded</span>
+      </div>
+    </div>
+  </div>
+  <div class="hero-rule"></div>
+</div>
+
+<!-- ── CONTENT ── -->
+<div class="content">
+
+  <!-- PREMISE + PLAYER -->
+  <div class="section">
+    <p class="section-label">Core Premise</p>
+    <p class="prose">In 2087, the HERALD Program — humanity's decades-long deep space broadcast — received a response. Eighteen months later, the Vael arrived in low orbit. No diplomacy. No demands. They began systematic planetary suppression: cities glassed, satellites destroyed, communications shattered. Earth's militaries fell within six weeks.</p>
+    <div class="transmission">
+      <p>Survivors now live in the cracks — underground warrens, deep forest camps, flooded coastal ruins. The Vael don't exterminate humans outright; they harvest, relocate, and experiment. Extinction isn't the goal. Subjugation is.</p>
+    </div>
+  </div>
+
+  <!-- PLAYER SPLIT -->
+  <div class="player-split">
+    <img class="player-img" src="images/fractured_signal/remnant.png" alt="The Remnant">
+    <div class="player-body">
+      <p class="player-tag">// Player Character</p>
+      <p class="player-name">The Remnant</p>
+      <p class="player-desc">An ordinary survivor with no special origin, no chosen-one prophecy. A former logistics worker, medic, engineer, or farmer who made it through the first wave by luck or instinct. Every decision costs something. Morality is not black and white.</p>
+      <div class="player-specs">
+        <div class="spec-row">
+          <span class="spec-key">Origin</span>
+          <span class="spec-val">Civilian — no military background</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-key">Ability</span>
+          <span class="spec-val">Skill-based progression only</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-key">Narrative</span>
+          <span class="spec-val">No chosen-one arc. No destiny.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOCATIONS -->
+  <div class="section">
+    <p class="section-label">Locations</p>
+    <div class="loc-grid">
+      <div class="loc-card">
+        <img class="loc-img" src="images/fractured_signal/underloft.png" alt="The Underloft">
+        <div class="loc-body">
+          <p class="loc-num">01</p>
+          <p class="loc-name">The Underloft</p>
+          <p class="loc-desc">A vast network of pre-war metro tunnels converted into a survivor settlement. Roughly 4,000 people. Lit by salvaged LEDs. Cramped, paranoid, alive.</p>
+        </div>
+      </div>
+      <div class="loc-card">
+        <img class="loc-img" src="images/fractured_signal/ashline.png" alt="The Ashline">
+        <div class="loc-body">
+          <p class="loc-num">02</p>
+          <p class="loc-name">The Ashline</p>
+          <p class="loc-desc">Ruins of a glassed city occupied by Vael processing units. A killing ground and salvage zone. Going in is a calculated gamble.</p>
+        </div>
+      </div>
+      <div class="loc-card">
+        <img class="loc-img" src="images/fractured_signal/greenwild.png" alt="The Greenwild">
+        <div class="loc-body">
+          <p class="loc-num">03</p>
+          <p class="loc-name">The Greenwild</p>
+          <p class="loc-desc">Dense overgrown forest reclaiming suburban ruins. The Vael struggle to patrol it — their sensors are confused by dense biomass.</p>
+        </div>
+      </div>
+      <div class="loc-card">
+        <img class="loc-img" src="images/fractured_signal/tidemark.png" alt="Tidemark">
+        <div class="loc-body">
+          <p class="loc-num">04</p>
+          <p class="loc-name">Tidemark</p>
+          <p class="loc-desc">Flooded coastal ruins. Survivor platforms built across rooftops. A trade hub — if you can survive the tides and the patrols.</p>
+        </div>
+      </div>
+      <div class="loc-card">
+        <img class="loc-img" src="images/fractured_signal/cradle.png" alt="The Cradle">
+        <div class="loc-body">
+          <p class="loc-num">05</p>
+          <p class="loc-name">The Cradle</p>
+          <p class="loc-desc">A sealed pre-war research bunker. Contains AI systems, biological archives, and partial HERALD schematics. Multiple factions racing to control it.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FACTIONS — HUMAN -->
+  <div class="section">
+    <p class="section-label">Human Factions</p>
+    <div class="faction-grid">
+      <div class="faction-card">
+        <img class="faction-img" src="images/fractured_signal/remnant_council.png" alt="Remnant Council">
+        <div class="faction-body">
+          <span class="faction-tag tag-human">Human</span>
+          <p class="faction-name">The Remnant Council</p>
+          <p class="faction-desc">Governing body of the Underloft. Bureaucratic, cautious, increasingly authoritarian. Has a fragile peace with certain Vael patrols — the nature of which is disputed.</p>
+        </div>
+      </div>
+      <div class="faction-card">
+        <img class="faction-img" src="images/fractured_signal/feral.png" alt="The Ferals">
+        <div class="faction-body">
+          <span class="faction-tag tag-human">Human</span>
+          <p class="faction-name">The Ferals</p>
+          <p class="faction-desc">Decentralized clans in the Greenwild. No central leadership. Deeply suspicious of organized groups. Unpredictable allies, fierce fighters.</p>
+        </div>
+      </div>
+      <div class="faction-card">
+        <img class="faction-img" src="images/fractured_signal/signal.png" alt="Signal Corps">
+        <div class="faction-body">
+          <span class="faction-tag tag-human">Human</span>
+          <p class="faction-name">The Signal Corps</p>
+          <p class="faction-desc">Former scientists and HERALD survivors. Believe the answer lies in understanding Vael technology. Seen as dangerous idealists — or the last hope.</p>
+        </div>
+      </div>
+      <div class="faction-card">
+        <img class="faction-img" src="images/fractured_signal/accord.png" alt="The Accord">
+        <div class="faction-body">
+          <span class="faction-tag tag-human">Human</span>
+          <p class="faction-name">The Accord</p>
+          <p class="faction-desc">Collaborationists who accepted Vael rule for protected zones. Many genuinely believe cooperation is the only path to survival. Hated by most.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VAEL — FULL PANELS -->
+  <div class="section">
+    <p class="section-label">Vael Hierarchy</p>
+    <div class="vael-split">
+      <div class="vael-panel">
+        <img class="vael-panel-img" src="images/fractured_signal/vael_harvester.png" alt="Vael Harvester">
+        <div class="vael-panel-overlay"></div>
+        <div class="vael-panel-body">
+          <span class="vael-tag">Vael</span>
+          <p class="vael-name">Harvesters</p>
+          <p class="vael-desc">Ground-level bio-mechanical units grown for a specific function. Patrol, capture, process. Some older units have begun exhibiting anomalous, unpredictable behaviour.</p>
+        </div>
+      </div>
+      <div class="vael-panel">
+        <img class="vael-panel-img" src="images/fractured_signal/vael_overseer.png" alt="Vael Overseer">
+        <div class="vael-panel-overlay"></div>
+        <div class="vael-panel-body">
+          <span class="vael-tag">Vael</span>
+          <p class="vael-name">Overseers</p>
+          <p class="vael-desc">Commanding class. Rarely seen on the ground. Communicate via harmonic resonance — not language. Their goals on Earth extend beyond territory.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUEST TYPES -->
+  <div class="section">
+    <p class="section-label">Quest Types</p>
+    <div class="quest-grid">
+      <div class="quest-card">
+        <p class="quest-type">// Type 01</p>
+        <p class="quest-name">Scavenge & Recover</p>
+        <p class="quest-desc">Enter a contested zone to retrieve supplies, technology, or people. High risk, essential payoff. Time pressure or enemy presence raises the stakes.</p>
+      </div>
+      <div class="quest-card">
+        <p class="quest-type">// Type 02</p>
+        <p class="quest-name">Faction Tensions</p>
+        <p class="quest-desc">Navigate the fractured politics between survivor groups. Mediate, negotiate, manipulate, or fight. No faction is purely good.</p>
+      </div>
+      <div class="quest-card">
+        <p class="quest-type">// Type 03</p>
+        <p class="quest-name">Vael Disruption</p>
+        <p class="quest-desc">Sabotage Harvester patrols, disrupt Vael operations, or free captive survivors. Requires stealth or force. Success draws increased Vael attention.</p>
+      </div>
+      <div class="quest-card">
+        <p class="quest-type">// Type 04</p>
+        <p class="quest-name">Lore & Discovery</p>
+        <p class="quest-desc">Investigate the deeper mysteries. What do the Vael actually want? Why did HERALD's signal bring them here? Piece together fragments through exploration.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TONE -->
+  <div class="section">
+    <p class="section-label">Tone</p>
+    <p class="prose">Grim, grounded, and suffocating. There is no military to call. No cavalry. No guarantee that doing the right thing keeps you alive. The world is visually dark — emergency lighting, filtered grey skies, bioluminescent Vael structures cutting through the dark like wounds. Music is sparse: distant industrial hum, silence, the sound of breathing. Hope exists — but it costs something every time.</p>
+  </div>
+
+  <!-- DIFFICULTY -->
+  <div class="section">
+    <p class="section-label">Difficulty</p>
+    <div class="diff-grid">
+      <div class="diff-cell diff-surviving">
+        <p class="diff-label">Surviving</p>
+        <p class="diff-desc">Resources scarce but manageable. Enemy patrols predictable. Consequences of bad decisions are survivable. The world is brutal but learnable.</p>
+      </div>
+      <div class="diff-cell diff-enduring">
+        <p class="diff-label">Enduring</p>
+        <p class="diff-desc">Resources tight. Enemies adapt. Every mission carries real risk. Faction decisions have lasting consequences. Death is common. Recovery is slow.</p>
+      </div>
+      <div class="diff-cell diff-remnant">
+        <p class="diff-label">Remnant</p>
+        <p class="diff-desc">Permadeath for companions. Resources near-zero. Vael actively hunt player patterns. One wrong decision can unravel everything built over hours of play.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="page-footer">
+  <p class="footer-text">Fractured Signal &nbsp;//&nbsp; Game Bible v1.0 &nbsp;//&nbsp; Earth 2087+ &nbsp;//&nbsp; All Rights Reserved</p>
+</div>
+
+</body>
+</html>

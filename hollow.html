@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hollow — Game Bible</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@200;300;400&family=Courier+Prime:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #06070a;
+    --deep: #04050708;
+    --surface: #0a0c10;
+    --card: #0d1018;
+    --card-hover: #111520;
+    --blue: #4a6a9a;
+    --ice: #7a9aba;
+    --ice-dim: rgba(122,154,186,0.1);
+    --ice-border: rgba(122,154,186,0.14);
+    --cold: #2a3a50;
+    --text: #c0ccd8;
+    --muted: rgba(192,204,216,0.4);
+    --wrong: rgba(180,200,160,0.55);
+    --window: rgba(200,182,68,0.05);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 200;
+    line-height: 1.75;
+    overflow-x: hidden;
+  }
+
+  /* static noise */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.45;
+  }
+
+  /* ── BACK LINK ── */
+  .back-link {
+    position: fixed;
+    top: 24px; left: 28px;
+    z-index: 200;
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    font-weight: 300;
+    transition: color 0.3s;
+  }
+  .back-link:hover { color: var(--ice); }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    height: 100vh;
+    min-height: 640px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('images/hollow/stillwater.png');
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.36) saturate(0.58);
+    transform: scale(1.04);
+    transition: transform 12s ease;
+  }
+
+  .hero:hover .hero-bg { transform: scale(1.0); }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 50% 52%, rgba(195,175,65,0.07) 0%, transparent 48%),
+      linear-gradient(
+        to bottom,
+        rgba(6,7,10,0.08) 0%,
+        rgba(6,7,10,0.04) 20%,
+        rgba(6,7,10,0.72) 65%,
+        rgba(6,7,10,1) 100%
+      );
+  }
+
+  /* flicker */
+  .hero-flicker {
+    position: absolute;
+    inset: 0;
+    background: rgba(122,154,186,0.015);
+    pointer-events: none;
+    animation: flicker 8s step-end infinite;
+  }
+
+  @keyframes flicker {
+    0%,100%  { opacity: 0; }
+    82%      { opacity: 0; }
+    83%      { opacity: 0.35; }
+    84%      { opacity: 0; }
+    85%      { opacity: 0.22; }
+    86%      { opacity: 0; }
+    91%      { opacity: 0; }
+    92%      { opacity: 0.55; }
+    93%      { opacity: 0.08; }
+    94%      { opacity: 0.48; }
+    95%      { opacity: 0; }
+    96%      { opacity: 0.28; }
+    97%      { opacity: 0; }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 0 80px 72px;
+  }
+
+  .hero-eyebrow {
+    font-size: 0.62rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 300;
+    margin-bottom: 20px;
+    opacity: 0.7;
+  }
+
+  .hero-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(6rem, 18vw, 14rem);
+    font-weight: 400;
+    line-height: 0.88;
+    letter-spacing: -0.025em;
+    color: var(--text);
+    position: relative;
+  }
+
+  .hero-subtitle {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 2.5vw, 1.6rem);
+    color: rgba(192,204,216,0.22);
+    margin-top: 12px;
+    display: block;
+    letter-spacing: -0.01em;
+  }
+
+  .hero-desc {
+    max-width: 420px;
+    font-size: 0.92rem;
+    line-height: 1.8;
+    color: var(--muted);
+    margin-top: 28px;
+    font-weight: 200;
+  }
+
+  .hero-rule {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(122,154,186,0.18), transparent);
+  }
+
+  /* ── CONTENT ── */
+  .content {
+    max-width: 1060px;
+    margin: 0 auto;
+    padding: 80px 80px 120px;
+    position: relative;
+    z-index: 1;
+  }
+
+  @media (max-width: 768px) {
+    .hero-content { padding: 0 24px 56px; }
+    .content { padding: 60px 20px 80px; }
+  }
+
+  .section { margin-bottom: 80px; }
+
+  .section-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--cold);
+    font-weight: 400;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, var(--ice-border), transparent);
+  }
+
+  .prose {
+    font-size: 1rem;
+    color: rgba(192,204,216,0.68);
+    line-height: 1.9;
+    font-weight: 200;
+  }
+
+  /* ── SIGNAL BOX ── */
+  .signal-box {
+    border: 1px solid var(--ice-border);
+    border-left: 2px solid rgba(122,154,186,0.3);
+    padding: 22px 28px;
+    margin: 32px 0;
+    background: linear-gradient(to right, rgba(10,14,12,0.9), rgba(10,12,16,0.8));
+    position: relative;
+  }
+
+  .signal-box::before {
+    content: attr(data-label);
+    position: absolute;
+    top: -8px; left: 18px;
+    background: var(--bg);
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    color: var(--ice);
+    padding: 0 8px;
+    opacity: 0.6;
+    text-transform: uppercase;
+  }
+
+  .signal-box p {
+    font-size: 0.95rem;
+    color: rgba(192,204,216,0.62);
+    line-height: 1.85;
+    font-style: italic;
+  }
+
+  /* ── RENA SPLIT ── */
+  .rena-split {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 0;
+    border: 1px solid var(--ice-border);
+    overflow: hidden;
+    margin-bottom: 80px;
+  }
+
+  .rena-img {
+    width: 100%;
+    height: 100%;
+    min-height: 480px;
+    object-fit: cover;
+    object-position: center top;
+    filter: brightness(0.55) saturate(0.5);
+    display: block;
+    transition: filter 0.5s;
+  }
+
+  .rena-split:hover .rena-img { filter: brightness(0.68) saturate(0.6); }
+
+  .rena-body {
+    padding: 44px 40px;
+    background: var(--card);
+    border-left: 1px solid var(--ice-border);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 22px;
+  }
+
+  .rena-label {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    color: var(--ice);
+    opacity: 0.55;
+    text-transform: uppercase;
+  }
+
+  .rena-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1.1;
+  }
+
+  .rena-desc {
+    font-size: 0.93rem;
+    color: var(--muted);
+    line-height: 1.85;
+  }
+
+  .rena-log {
+    border-top: 1px solid var(--ice-border);
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .log-row {
+    display: flex;
+    gap: 14px;
+    font-size: 0.82rem;
+  }
+
+  .log-key {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.56rem;
+    letter-spacing: 0.14em;
+    color: var(--ice);
+    opacity: 0.5;
+    text-transform: uppercase;
+    min-width: 88px;
+    padding-top: 2px;
+  }
+
+  .log-val {
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  @media (max-width: 700px) {
+    .rena-split { grid-template-columns: 1fr; }
+    .rena-img { min-height: 300px; height: 300px; }
+  }
+
+  /* ── MARKED FULL BLEED ── */
+  .full-bleed {
+    width: calc(100% + 160px);
+    margin-left: -80px;
+    height: 520px;
+    object-fit: cover;
+    object-position: center 30%;
+    filter: brightness(0.4) saturate(0.4);
+    display: block;
+  }
+
+  .full-bleed-caption {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+    text-align: center;
+    padding: 14px 0 72px;
+    opacity: 0.4;
+    border-bottom: 1px solid var(--ice-border);
+    margin-bottom: 80px;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 768px) {
+    .full-bleed { width: calc(100% + 40px); margin-left: -20px; height: 280px; }
+  }
+
+  /* ── LOCATION GRID ── */
+  .loc-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--ice-border);
+    border: 1px solid var(--ice-border);
+  }
+
+  @media (max-width: 768px) { .loc-grid { grid-template-columns: 1fr; } }
+
+  .loc-card {
+    background: var(--card);
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+
+  .loc-card:hover { background: var(--card-hover); }
+
+  .loc-img {
+    width: 100%;
+    height: 165px;
+    object-fit: cover;
+    object-position: center;
+    filter: brightness(0.4) saturate(0.45);
+    display: block;
+    transition: filter 0.5s, transform 0.6s;
+  }
+
+  .loc-card:hover .loc-img {
+    filter: brightness(0.55) saturate(0.6);
+    transform: scale(1.03);
+  }
+
+  .loc-body { padding: 18px 20px 22px; }
+
+  .loc-name {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    color: var(--text);
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+
+  .loc-meta {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+    opacity: 0.6;
+  }
+
+  .loc-desc {
+    font-size: 0.84rem;
+    color: rgba(192,204,216,0.5);
+    line-height: 1.65;
+  }
+
+  /* ── CHARACTER CARDS ── */
+  .char-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--ice-border);
+    border: 1px solid var(--ice-border);
+    margin-bottom: 80px;
+  }
+
+  @media (max-width: 768px) { .char-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 420px) { .char-grid { grid-template-columns: 1fr; } }
+
+  .char-card {
+    background: var(--card);
+    overflow: hidden;
+    transition: background 0.3s;
+    position: relative;
+  }
+
+  .char-card:hover { background: var(--card-hover); }
+
+  .char-img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    object-position: center top;
+    filter: brightness(0.4) saturate(0.4);
+    display: block;
+    transition: filter 0.5s, transform 0.7s;
+  }
+
+  .char-card:hover .char-img {
+    filter: brightness(0.58) saturate(0.55);
+    transform: scale(1.04);
+  }
+
+  /* special treatment for marked */
+  .char-card.marked .char-img {
+    filter: brightness(0.35) saturate(0.3) hue-rotate(180deg);
+  }
+
+  .char-card.marked:hover .char-img {
+    filter: brightness(0.5) saturate(0.4) hue-rotate(160deg);
+  }
+
+  .char-overlay {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 24px 18px 18px;
+    background: linear-gradient(to top, rgba(6,7,10,0.98) 0%, rgba(6,7,10,0.5) 65%, transparent 100%);
+  }
+
+  .char-status {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    opacity: 0.65;
+  }
+
+  .status-survivor { color: var(--ice); }
+  .status-unknown  { color: rgba(180,200,160,0.8); }
+  .status-threat   { color: rgba(200,150,100,0.8); }
+
+  .char-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 0.92rem;
+    font-style: italic;
+    color: var(--text);
+    margin-bottom: 6px;
+    line-height: 1.2;
+  }
+
+  .char-desc {
+    font-size: 0.74rem;
+    color: rgba(192,204,216,0.45);
+    line-height: 1.55;
+  }
+
+  /* ── FACTION GRID ── */
+  .faction-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--ice-border);
+    border: 1px solid var(--ice-border);
+  }
+
+  @media (max-width: 560px) { .faction-grid { grid-template-columns: 1fr; } }
+
+  .faction-card {
+    background: var(--card);
+    padding: 24px 26px;
+    transition: background 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .faction-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 0;
+    background: rgba(122,154,186,0.15);
+    transition: width 0.4s;
+  }
+
+  .faction-card:hover { background: var(--card-hover); }
+  .faction-card:hover::before { width: 2px; }
+
+  .faction-name {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--text);
+    margin-bottom: 4px;
+    line-height: 1.2;
+  }
+
+  .faction-meta {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+    opacity: 0.6;
+  }
+
+  .faction-desc {
+    font-size: 0.88rem;
+    color: rgba(192,204,216,0.52);
+    line-height: 1.7;
+  }
+
+  /* ── QUEST CARDS ── */
+  .quest-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--ice-border);
+    border: 1px solid var(--ice-border);
+  }
+
+  @media (max-width: 560px) { .quest-grid { grid-template-columns: 1fr; } }
+
+  .quest-card {
+    background: var(--card);
+    padding: 26px 28px;
+    transition: background 0.25s;
+  }
+
+  .quest-card:hover { background: var(--card-hover); }
+
+  .quest-type {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.18em;
+    color: var(--ice);
+    opacity: 0.5;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  .quest-name {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--text);
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  .quest-desc {
+    font-size: 0.88rem;
+    color: rgba(192,204,216,0.5);
+    line-height: 1.7;
+  }
+
+  /* ── CIVIC TOWER FULL BLEED ── */
+  .tower-bleed {
+    width: calc(100% + 160px);
+    margin-left: -80px;
+    height: 460px;
+    object-fit: cover;
+    object-position: center;
+    filter: brightness(0.35) saturate(0.35);
+    display: block;
+    margin-bottom: 0;
+  }
+
+  .tower-caption {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.56rem;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-align: center;
+    padding: 14px 0 72px;
+    opacity: 0.35;
+    border-bottom: 1px solid var(--ice-border);
+    margin-bottom: 80px;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 768px) {
+    .tower-bleed { width: calc(100% + 40px); margin-left: -20px; height: 260px; }
+  }
+
+  /* ── DIFFICULTY ── */
+  .diff-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--ice-border);
+    border: 1px solid var(--ice-border);
+  }
+
+  @media (max-width: 600px) { .diff-grid { grid-template-columns: 1fr; } }
+
+  .diff-cell {
+    background: var(--card);
+    padding: 24px;
+    position: relative;
+  }
+
+  .diff-cell::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .diff-cell:hover::after { opacity: 1; }
+  .diff-easy::after  { background: rgba(100,160,100,0.4); }
+  .diff-mid::after   { background: rgba(122,154,186,0.4); }
+  .diff-hard::after  { background: rgba(180,100,80,0.4); }
+
+  .diff-name {
+    font-size: 0.68rem;
+    font-weight: 400;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    color: var(--ice);
+    opacity: 0.6;
+  }
+
+  .diff-hard .diff-name { opacity: 0.9; color: rgba(192,204,216,0.8); }
+
+  .diff-desc {
+    font-size: 0.86rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* ── RESTRICTIONS ── */
+  .restriction-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    border: 1px solid var(--ice-border);
+    padding: 28px 34px;
+    background: var(--card);
+  }
+
+  .restriction-list li {
+    font-size: 0.9rem;
+    color: var(--muted);
+    padding-left: 20px;
+    position: relative;
+    line-height: 1.7;
+  }
+
+  .restriction-list li::before {
+    content: '·';
+    position: absolute;
+    left: 0;
+    color: var(--blue);
+    font-size: 1.2rem;
+    line-height: 1.2;
+  }
+
+  /* ── FOOTER ── */
+  .page-footer {
+    text-align: center;
+    padding: 40px 24px 56px;
+    border-top: 1px solid var(--ice-border);
+  }
+
+  .footer-text {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.22em;
+    color: var(--muted);
+    opacity: 0.3;
+    text-transform: uppercase;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-eyebrow { animation: fadeUp 0.5s 0.1s both; }
+  .hero-title   { animation: fadeUp 0.8s 0.2s both; }
+  .hero-desc    { animation: fadeUp 0.5s 0.5s both; }
+</style>
+</head>
+<body>
+
+<a class="back-link" href="index.html">← All Games</a>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-flicker"></div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">Game Bible &nbsp;·&nbsp; Modern Urban Horror &nbsp;·&nbsp; Voss City</p>
+    <h1 class="hero-title">
+      Hollow
+      <span class="hero-subtitle">Voss City is sealed. The silence is not empty.</span>
+    </h1>
+    <p class="hero-desc">Something moved through the city one night and left behind a silence that isn't quite silence. People started acting differently — then some stopped acting at all.</p>
+  </div>
+  <div class="hero-rule"></div>
+</div>
+
+<!-- ── CONTENT ── -->
+<div class="content">
+
+  <!-- PREMISE -->
+  <div class="section">
+    <p class="section-label">What Happened</p>
+    <p class="prose">Voss City has been sealed. The bridges are gone. Broadcasts stopped. Something moved through the city one night and left behind a silence that isn't quite silence. People started acting differently — then some stopped acting at all. No one knows what it is. No one who got close enough to find out came back able to explain it.</p>
+    <div class="signal-box" data-label="Survivor note — unverified">
+      <p>The Hollow does not communicate. It does not negotiate. It is drawn to noise, light, and groups of people. The longer someone remains in the city, the more they begin to resemble it: quiet, still, and wrong. We don't know if that process is reversible. We don't know when it starts. We don't know if it has already started.</p>
+    </div>
+    <p class="prose">There is no cavalry coming. There is no authority left to call. There is only Rena, and the city, and the question of how long she has.</p>
+  </div>
+
+  <!-- RENA SPLIT -->
+  <div class="rena-split">
+    <img class="rena-img" src="images/hollow/rena.png" alt="Rena Kolbe">
+    <div class="rena-body">
+      <p class="rena-label">// Player Character — Voss City Maintenance</p>
+      <p class="rena-name">Rena Kolbe</p>
+      <p class="rena-desc">A former city maintenance worker with no combat training, no special knowledge, and no reason to be the one who survives. She knows the city's infrastructure — tunnels, service corridors, power grids — which is the only edge she has. She is not brave. She is still here.</p>
+      <div class="rena-log">
+        <div class="log-row">
+          <span class="log-key">Background</span>
+          <span class="log-val">City maintenance — knows infrastructure, nothing else</span>
+        </div>
+        <div class="log-row">
+          <span class="log-key">Weapons</span>
+          <span class="log-val">None. Growth is knowledge, not ability.</span>
+        </div>
+        <div class="log-row">
+          <span class="log-key">Unknown</span>
+          <span class="log-val">Whether she is already changing.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOCATIONS -->
+  <div class="section">
+    <p class="section-label">Voss City — Known Zones</p>
+    <div class="loc-grid">
+      <div class="loc-card">
+        <img class="loc-img" src="images/hollow/stillwater.png" alt="The Stillwater District">
+        <div class="loc-body">
+          <p class="loc-name">The Stillwater District</p>
+          <p class="loc-meta">Former commercial core · Now mostly silent</p>
+          <p class="loc-desc">The Hollow moved through here first. Lights still on in the shops. People who stayed behind are not quite people anymore. Rich in supplies. Do not linger.</p>
+        </div>
+      </div>
+      <div class="loc-card">
+        <img class="loc-img" src="images/hollow/voss.png" alt="Voss General Hospital">
+        <div class="loc-body">
+          <p class="loc-name">Voss General Hospital</p>
+          <p class="loc-meta">East side · Barricaded, contested</p>
+          <p class="loc-desc">The largest survivor stronghold. Overcrowded, under-resourced, and fracturing under too many desperate people making rules for each other.</p>
+        </div>
+      </div>
+      <div class="loc-card">
+        <img class="loc-img" src="images/hollow/transit.png" alt="The Transit Yards">
+        <div class="loc-body">
+          <p class="loc-name">The Transit Yards</p>
+          <p class="loc-meta">Southern edge · Rena's home turf</p>
+          <p class="loc-desc">Maintenance depot and rail yard. Underground service tunnels. One of the few places the Hollow has not fully occupied — the underground confuses it somehow.</p>
+        </div>
+      </div>
+      <div class="loc-card">
+        <img class="loc-img" src="images/hollow/coldwater.png" alt="Coldwater Heights">
+        <div class="loc-body">
+          <p class="loc-name">Coldwater Heights</p>
+          <p class="loc-meta">Northern residential hills · Sealed community</p>
+          <p class="loc-desc">Food, water, guns, walls. They have also been alone long enough to develop their own explanations for what the Hollow is. Those explanations have become doctrine.</p>
+        </div>
+      </div>
+      <div class="loc-card">
+        <img class="loc-img" src="images/hollow/civic.png" alt="The Voss Civic Tower">
+        <div class="loc-body">
+          <p class="loc-name">The Voss Civic Tower</p>
+          <p class="loc-meta">City centre · Origin point</p>
+          <p class="loc-desc">42 storeys. One light on in the upper floors. Someone still transmitting. Nothing confirmed about what's in there has been good.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MARKED FULL BLEED -->
+  <img class="full-bleed" src="images/hollow/marked.png" alt="A Marked person">
+  <p class="full-bleed-caption">— the marked — still human-shaped — still occasionally communicative — but wrong —</p>
+
+  <!-- CHARACTERS -->
+  <div class="section">
+    <p class="section-label">People Still in the City</p>
+    <div class="char-grid">
+      <div class="char-card">
+        <img class="char-img" src="images/hollow/ward_authority_figure.png" alt="Ward Authority">
+        <div class="char-overlay">
+          <p class="char-status status-threat">The Ward</p>
+          <p class="char-name">Ward Authority</p>
+          <p class="char-desc">Controls medicine. Uses it as leverage. Helpful if you comply.</p>
+        </div>
+      </div>
+      <div class="char-card">
+        <img class="char-img" src="images/hollow/threadbare.png" alt="Threadbare Survivor">
+        <div class="char-overlay">
+          <p class="char-status status-survivor">Threadbare</p>
+          <p class="char-name">The Threadbare</p>
+          <p class="char-desc">Refused to join any group. Still alive. Knows things others don't.</p>
+        </div>
+      </div>
+      <div class="char-card">
+        <img class="char-img" src="images/hollow/heights_member.png" alt="Heights Assembly">
+        <div class="char-overlay">
+          <p class="char-status status-threat">Heights Assembly</p>
+          <p class="char-name">Heights Member</p>
+          <p class="char-desc">They survived because they were meant to. Outsiders corrupt that.</p>
+        </div>
+      </div>
+      <div class="char-card marked">
+        <img class="char-img" src="images/hollow/marked.png" alt="The Marked">
+        <div class="char-overlay">
+          <p class="char-status status-unknown">Status Unknown</p>
+          <p class="char-name">The Marked</p>
+          <p class="char-desc">Too still. Too quiet. Something of them may still be in there.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FACTIONS -->
+  <div class="section">
+    <p class="section-label">Factions & Groups</p>
+    <div class="faction-grid">
+      <div class="faction-card">
+        <p class="faction-name">The Ward</p>
+        <p class="faction-meta">Voss General · Organised, authoritarian</p>
+        <p class="faction-desc">Survivors who built a functional but brutal hierarchy around the hospital. They control access to medicine and use it as leverage. Helpful if you comply. Dangerous if you don't.</p>
+      </div>
+      <div class="faction-card">
+        <p class="faction-name">The Threadbare</p>
+        <p class="faction-meta">Scattered across the city · Loose network of loners</p>
+        <p class="faction-desc">People who refused to join organised groups. They communicate through wall markings — safe routes, danger, supply caches. No leadership. High mortality. The ones still alive know things.</p>
+      </div>
+      <div class="faction-card">
+        <p class="faction-name">The Heights Assembly</p>
+        <p class="faction-meta">Coldwater Heights · Insular, ideologically rigid</p>
+        <p class="faction-desc">Constructed a belief system around the Hollow — that it is a purge, that they survived because they were meant to, and that letting outsiders in would corrupt their survival. Not all members believe equally.</p>
+      </div>
+      <div class="faction-card">
+        <p class="faction-name">The Marked</p>
+        <p class="faction-meta">Everywhere · Not truly a faction</p>
+        <p class="faction-desc">People in late stages of whatever the Hollow does. Still human-shaped. Still occasionally communicative. Other survivors disagree violently on whether they can be helped, ignored, or must be avoided entirely.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUEST TYPES -->
+  <div class="section">
+    <p class="section-label">Quest Types</p>
+    <div class="quest-grid">
+      <div class="quest-card">
+        <p class="quest-type">Type I</p>
+        <p class="quest-name">Resource Runs</p>
+        <p class="quest-desc">Retrieve something from a location that has become compromised. The challenge is rarely just getting in — it's deciding how much risk is worth the cost, and whether to come back alone.</p>
+      </div>
+      <div class="quest-card">
+        <p class="quest-type">Type II</p>
+        <p class="quest-name">Custody Decisions</p>
+        <p class="quest-desc">Rena encounters someone who is a problem — a Marked individual, a wounded stranger, a child whose presence makes stealth impossible. There is no clean answer. The game does not grade her.</p>
+      </div>
+      <div class="quest-card">
+        <p class="quest-type">Type III</p>
+        <p class="quest-name">Faction Errands</p>
+        <p class="quest-desc">Gaining access to a faction's resources requires doing something for them first. What matters is what Rena learns about them while completing it — and whether they are worth staying aligned with.</p>
+      </div>
+      <div class="quest-card">
+        <p class="quest-type">Type IV</p>
+        <p class="quest-name">Dead Reckoning</p>
+        <p class="quest-desc">Follow a trail to piece together what happened to a specific place or person. These quests do not promise answers. Sometimes the trail ends with nothing. The truth in Voss City is not redemptive.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TONE -->
+  <div class="section">
+    <p class="section-label">Tone & Style</p>
+    <p class="prose">Bleak, grounded, and achingly human. The horror is not primarily the Hollow — it is watching people fail each other under pressure. Violence is unglamorous. Survival is not triumphant. The city feels lived-in and decaying. Ambient sound does more work than jump scares. Nothing is explained cleanly. The player is trusted to sit with uncertainty.</p>
+    <div class="signal-box" data-label="Design note">
+      <p>The Hollow is never shown. Never explained. No quest resolves its origin. No ending confirms what it is. The horror is the gap between what is almost normal and what is wrong — and the question of whether Rena is already on the wrong side of that line.</p>
+    </div>
+  </div>
+
+  <!-- DIFFICULTY -->
+  <div class="section">
+    <p class="section-label">Difficulty</p>
+    <div class="diff-grid">
+      <div class="diff-cell diff-easy">
+        <p class="diff-name">Easy</p>
+        <p class="diff-desc">The Hollow moves slower and is less drawn to minor noise. Resources are slightly more common. Moral choices still have consequences. Death is still possible.</p>
+      </div>
+      <div class="diff-cell diff-mid">
+        <p class="diff-name">Medium</p>
+        <p class="diff-desc">Resources are scarce. The Hollow is perceptive. Faction trust erodes if Rena takes too long. Most mistakes are recoverable — once.</p>
+      </div>
+      <div class="diff-cell diff-hard">
+        <p class="diff-name">Hard</p>
+        <p class="diff-desc">Permanent consequences for all major decisions. The Hollow learns Rena's patterns. Supplies degrade. Factions become hostile. No quest guarantees a reward.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="page-footer">
+  <p class="footer-text">Hollow &nbsp;·&nbsp; Game Bible v1.0 &nbsp;·&nbsp; Voss City &nbsp;·&nbsp; All Rights Reserved</p>
+</div>
+
+</body>
+</html>

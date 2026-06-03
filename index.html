@@ -5,16 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Game Design Portfolio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@200;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Serif+Display:ital@0;1&family=Outfit:wght@200;400;500;700&family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg: #0c0c0e;
-    --surface: #111114;
-    --border: rgba(255,255,255,0.07);
+    --bg: #09090b;
     --text: #e8e4dc;
-    --muted: rgba(232,228,220,0.45);
+    --muted: rgba(232,228,220,0.42);
+    --border: rgba(255,255,255,0.06);
   }
 
   html { scroll-behavior: smooth; }
@@ -36,12 +35,13 @@
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
     pointer-events: none;
     z-index: 999;
-    opacity: 0.4;
+    opacity: 0.35;
   }
 
+  /* ── HEADER ── */
   header {
     text-align: center;
-    padding: 100px 24px 80px;
+    padding: 120px 24px 96px;
     position: relative;
   }
 
@@ -50,58 +50,59 @@
     position: absolute;
     bottom: 0; left: 50%;
     transform: translateX(-50%);
-    width: 1px;
-    height: 48px;
-    background: linear-gradient(to bottom, rgba(255,255,255,0.15), transparent);
+    width: 1px; height: 60px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.14), transparent);
   }
 
   .eyebrow {
     font-family: 'Outfit', sans-serif;
     font-weight: 400;
-    font-size: 0.7rem;
-    letter-spacing: 0.25em;
+    font-size: 0.68rem;
+    letter-spacing: 0.3em;
     text-transform: uppercase;
     color: var(--muted);
-    margin-bottom: 20px;
+    margin-bottom: 26px;
   }
 
   h1 {
     font-family: 'Cormorant Garamond', serif;
     font-weight: 300;
-    font-size: clamp(2.8rem, 7vw, 5.5rem);
-    line-height: 1.05;
-    letter-spacing: -0.01em;
-    margin-bottom: 20px;
+    font-size: clamp(3rem, 7.5vw, 5.8rem);
+    line-height: 1.02;
+    letter-spacing: -0.015em;
+    margin-bottom: 22px;
   }
 
   h1 em {
     font-style: italic;
     font-weight: 300;
-    color: rgba(232,228,220,0.6);
+    color: rgba(232,228,220,0.52);
   }
 
   .header-desc {
-    max-width: 480px;
+    max-width: 460px;
     margin: 0 auto;
-    font-size: 0.95rem;
-    line-height: 1.7;
+    font-size: 0.93rem;
+    line-height: 1.78;
     color: var(--muted);
     font-weight: 200;
   }
 
+  /* ── MAIN GRID ── */
   main {
-    max-width: 1100px;
+    max-width: 1160px;
     margin: 0 auto;
-    padding: 80px 24px 120px;
+    padding: 80px 2px 120px;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 2px;
   }
 
   @media (max-width: 700px) {
-    main { grid-template-columns: 1fr; }
+    main { grid-template-columns: 1fr; padding: 60px 0 80px; }
   }
 
+  /* ── CARD ── */
   .game-card {
     position: relative;
     overflow: hidden;
@@ -109,159 +110,226 @@
     text-decoration: none;
     color: inherit;
     aspect-ratio: 4/3;
+    background: #0c0c0e;
     cursor: pointer;
   }
 
-  .card-bg {
+  /* actual game image */
+  .card-photo {
     position: absolute;
     inset: 0;
-    transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .game-card:hover .card-bg { transform: scale(1.04); }
+  .game-card:hover .card-photo { transform: scale(1.07); }
 
-  /* Ashen Throne - volcanic orange */
-  .card-fantasy .card-bg {
-    background:
-      radial-gradient(ellipse at 30% 70%, rgba(180,60,20,0.6) 0%, transparent 60%),
-      radial-gradient(ellipse at 80% 20%, rgba(100,30,10,0.4) 0%, transparent 50%),
-      #1a0e08;
-  }
+  /* per-game photo treatment */
+  .card-fantasy .card-photo  { filter: brightness(0.48) saturate(0.88); }
+  .card-scifi   .card-photo  { filter: brightness(0.38) saturate(0.75); }
+  .card-horror  .card-photo  { filter: brightness(0.34) saturate(0.5);  }
+  .card-mystery .card-photo  { filter: brightness(0.38) saturate(0.7) sepia(0.18); }
 
-  /* Fractured Signal - alien teal/amber */
-  .card-scifi .card-bg {
-    background:
-      radial-gradient(ellipse at 70% 30%, rgba(20,120,100,0.5) 0%, transparent 55%),
-      radial-gradient(ellipse at 20% 80%, rgba(160,100,20,0.35) 0%, transparent 50%),
-      #060f0e;
-  }
-
-  /* Hollow - cold grey/blue */
-  .card-horror .card-bg {
-    background:
-      radial-gradient(ellipse at 50% 80%, rgba(30,40,60,0.8) 0%, transparent 60%),
-      radial-gradient(ellipse at 20% 20%, rgba(60,70,90,0.3) 0%, transparent 50%),
-      #080a10;
-  }
-
-  /* Veil Murders - deep sepia ink */
-  .card-mystery .card-bg {
-    background:
-      radial-gradient(ellipse at 40% 60%, rgba(80,50,20,0.6) 0%, transparent 55%),
-      radial-gradient(ellipse at 75% 25%, rgba(40,25,10,0.5) 0%, transparent 50%),
-      #0e0a05;
-  }
-
-  .card-grid-lines {
+  /* per-game atmospheric colour tint */
+  .card-tint {
     position: absolute;
     inset: 0;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
-    background-size: 40px 40px;
-    opacity: 0;
-    transition: opacity 0.4s;
+    pointer-events: none;
+    transition: opacity 0.45s;
   }
 
-  .game-card:hover .card-grid-lines { opacity: 1; }
+  .card-fantasy .card-tint {
+    background:
+      radial-gradient(ellipse at 30% 80%, rgba(210,65,15,0.38) 0%, transparent 56%),
+      radial-gradient(ellipse at 78% 20%, rgba(100,30,5,0.28) 0%, transparent 48%);
+  }
+  .card-scifi .card-tint {
+    background:
+      radial-gradient(ellipse at 68% 38%, rgba(0,165,125,0.32) 0%, transparent 55%),
+      radial-gradient(ellipse at 18% 78%, rgba(0,55,45,0.22) 0%, transparent 50%);
+  }
+  .card-horror .card-tint {
+    background:
+      radial-gradient(ellipse at 50% 55%, rgba(15,30,55,0.5) 0%, transparent 65%),
+      radial-gradient(ellipse at 50% 50%, rgba(180,165,60,0.03) 0%, transparent 45%);
+  }
+  .card-mystery .card-tint {
+    background:
+      radial-gradient(ellipse at 22% 72%, rgba(190,130,35,0.22) 0%, transparent 52%),
+      radial-gradient(ellipse at 72% 28%, rgba(65,40,12,0.22) 0%, transparent 50%);
+  }
 
+  /* bottom fade for text legibility */
+  .card-vignette {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(0,0,0,0.90) 0%,
+      rgba(0,0,0,0.44) 36%,
+      rgba(0,0,0,0.10) 60%,
+      transparent 80%
+    );
+    pointer-events: none;
+  }
+
+  /* ── CARD CONTENT ── */
   .card-content {
     position: absolute;
-    inset: 0;
-    padding: 36px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 60%);
+    bottom: 0; left: 0; right: 0;
+    padding: 32px 36px 40px;
   }
 
   .card-genre {
-    font-size: 0.65rem;
-    letter-spacing: 0.2em;
+    font-size: 0.6rem;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
-    font-weight: 400;
-    margin-bottom: 8px;
-    opacity: 0.6;
+    margin-bottom: 7px;
+    opacity: 0.65;
     transition: opacity 0.3s;
+    font-weight: 400;
+    display: block;
   }
 
   .game-card:hover .card-genre { opacity: 1; }
 
+  /* per-game genre labels */
+  .card-fantasy .card-genre  {
+    font-family: 'Cinzel', serif;
+    color: #e07028;
+    letter-spacing: 0.18em;
+  }
+  .card-scifi .card-genre {
+    font-family: 'Share Tech Mono', monospace;
+    color: #00d0aa;
+    letter-spacing: 0.16em;
+  }
+  .card-horror .card-genre {
+    font-family: 'Outfit', sans-serif;
+    color: #6a90b8;
+    letter-spacing: 0.28em;
+  }
+  .card-mystery .card-genre {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: #c89030;
+    font-size: 0.7rem;
+    letter-spacing: 0.13em;
+  }
+
+  /* per-game title fonts */
   .card-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(1.6rem, 3vw, 2.2rem);
-    font-weight: 600;
-    line-height: 1.1;
+    display: block;
+    line-height: 1.05;
     margin-bottom: 10px;
   }
 
-  .card-tagline {
-    font-size: 0.8rem;
-    line-height: 1.5;
-    color: rgba(232,228,220,0.55);
-    max-width: 300px;
-    transition: color 0.3s;
+  .card-fantasy .card-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.7rem, 2.8vw, 2.3rem);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--text);
+  }
+  .card-scifi .card-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(1.6rem, 2.8vw, 2.2rem);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+  .card-horror .card-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.4rem, 3.8vw, 3.2rem);
+    font-weight: 400;
+    letter-spacing: -0.025em;
+    color: var(--text);
+  }
+  .card-mystery .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 2.8vw, 2.2rem);
+    font-weight: 900;
+    letter-spacing: -0.01em;
+    color: var(--text);
   }
 
-  .game-card:hover .card-tagline { color: rgba(232,228,220,0.8); }
+  .card-tagline {
+    font-size: 0.78rem;
+    line-height: 1.6;
+    color: rgba(232,228,220,0.46);
+    max-width: 310px;
+    transition: color 0.35s;
+    font-weight: 200;
+  }
 
+  .game-card:hover .card-tagline { color: rgba(232,228,220,0.76); }
+
+  /* ── ARROW ── */
   .card-arrow {
     position: absolute;
-    top: 32px;
-    right: 32px;
-    width: 36px;
-    height: 36px;
-    border: 1px solid rgba(255,255,255,0.15);
+    top: 26px; right: 26px;
+    width: 36px; height: 36px;
+    border: 1px solid rgba(255,255,255,0.18);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     opacity: 0;
-    transform: translate(-4px, 4px);
-    transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
+    transform: translate(-5px, 5px);
+    transition: opacity 0.35s, transform 0.4s cubic-bezier(0.16,1,0.3,1);
   }
 
-  .game-card:hover .card-arrow {
-    opacity: 1;
-    transform: translate(0, 0);
-  }
+  .game-card:hover .card-arrow { opacity: 1; transform: translate(0,0); }
 
+  /* ── ACCENT LINE ── */
   .card-accent-line {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    height: 2px;
-    width: 0;
-    transition: width 0.5s cubic-bezier(0.16,1,0.3,1);
+    bottom: 0; left: 0;
+    height: 2px; width: 0;
+    transition: width 0.58s cubic-bezier(0.16,1,0.3,1);
   }
 
   .game-card:hover .card-accent-line { width: 100%; }
-  .card-fantasy .card-accent-line { background: linear-gradient(to right, #c0401a, #e07030); }
-  .card-scifi .card-accent-line { background: linear-gradient(to right, #0e8870, #c08020); }
-  .card-horror .card-accent-line { background: linear-gradient(to right, #2a3550, #4a6080); }
-  .card-mystery .card-accent-line { background: linear-gradient(to right, #7a5020, #c09040); }
 
-  footer {
-    text-align: center;
-    padding: 40px 24px;
-    border-top: 1px solid var(--border);
-    font-size: 0.75rem;
-    color: var(--muted);
-    letter-spacing: 0.08em;
+  .card-fantasy .card-accent-line {
+    background: linear-gradient(to right, #a03412, #e07028, #a03412);
+  }
+  .card-scifi .card-accent-line {
+    background: linear-gradient(to right, #007860, #00d0aa, #007860);
+  }
+  .card-horror .card-accent-line {
+    background: linear-gradient(to right, #18283e, #5a7a9a, #18283e);
+  }
+  .card-mystery .card-accent-line {
+    background: linear-gradient(to right, #60380e, #c89030, #60380e);
   }
 
-  /* entrance animation */
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 38px 24px;
+    border-top: 1px solid var(--border);
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── ANIMATIONS ── */
   @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
+    from { opacity: 0; transform: translateY(22px); }
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  header { animation: fadeUp 0.8s ease both; }
-  .game-card:nth-child(1) { animation: fadeUp 0.6s 0.2s ease both; }
-  .game-card:nth-child(2) { animation: fadeUp 0.6s 0.35s ease both; }
-  .game-card:nth-child(3) { animation: fadeUp 0.6s 0.5s ease both; }
-  .game-card:nth-child(4) { animation: fadeUp 0.6s 0.65s ease both; }
+  header                   { animation: fadeUp 0.9s ease both; }
+  .game-card:nth-child(1)  { animation: fadeUp 0.65s 0.20s ease both; }
+  .game-card:nth-child(2)  { animation: fadeUp 0.65s 0.35s ease both; }
+  .game-card:nth-child(3)  { animation: fadeUp 0.65s 0.50s ease both; }
+  .game-card:nth-child(4)  { animation: fadeUp 0.65s 0.65s ease both; }
 </style>
 </head>
 <body>
@@ -273,11 +341,13 @@
 </header>
 
 <main>
-  <a class="game-card card-fantasy" href="ashen-throne.html">
-    <div class="card-bg"></div>
-    <div class="card-grid-lines"></div>
+
+  <a class="game-card card-fantasy" href="ashen_throne.html">
+    <img class="card-photo" src="images/ashen_throne/cinderkeep.png" alt="Ashen Throne — Cinderkeep">
+    <div class="card-tint"></div>
+    <div class="card-vignette"></div>
     <div class="card-content">
-      <p class="card-genre">High Fantasy RPG</p>
+      <span class="card-genre">High Fantasy RPG</span>
       <h2 class="card-title">Ashen Throne</h2>
       <p class="card-tagline">Rise from demon foot soldier to Grand Marshal in a world where your people are the oppressed.</p>
     </div>
@@ -285,11 +355,12 @@
     <div class="card-accent-line"></div>
   </a>
 
-  <a class="game-card card-scifi" href="fractured-signal.html">
-    <div class="card-bg"></div>
-    <div class="card-grid-lines"></div>
+  <a class="game-card card-scifi" href="fractured_signal.html">
+    <img class="card-photo" src="images/fractured_signal/ashline.png" alt="Fractured Signal — The Ashline">
+    <div class="card-tint"></div>
+    <div class="card-vignette"></div>
     <div class="card-content">
-      <p class="card-genre">Post-Apocalyptic Sci-Fi</p>
+      <span class="card-genre">Post-Apoc // Sci-Fi</span>
       <h2 class="card-title">Fractured Signal</h2>
       <p class="card-tagline">Earth made first contact. The reply was a war fleet. Survive the aftermath underground.</p>
     </div>
@@ -298,10 +369,11 @@
   </a>
 
   <a class="game-card card-horror" href="hollow.html">
-    <div class="card-bg"></div>
-    <div class="card-grid-lines"></div>
+    <img class="card-photo" src="images/hollow/stillwater.png" alt="Hollow — The Stillwater District">
+    <div class="card-tint"></div>
+    <div class="card-vignette"></div>
     <div class="card-content">
-      <p class="card-genre">Modern Urban Horror</p>
+      <span class="card-genre">Modern Urban Horror</span>
       <h2 class="card-title">Hollow</h2>
       <p class="card-tagline">Voss City has been sealed. Something moved through it one night and left behind a silence that isn't quite silence.</p>
     </div>
@@ -309,17 +381,19 @@
     <div class="card-accent-line"></div>
   </a>
 
-  <a class="game-card card-mystery" href="veil-murders.html">
-    <div class="card-bg"></div>
-    <div class="card-grid-lines"></div>
+  <a class="game-card card-mystery" href="veil_murders.html">
+    <img class="card-photo" src="images/veil_murders/ashburn.png" alt="The Veil Murders — Ashburn Docks">
+    <div class="card-tint"></div>
+    <div class="card-vignette"></div>
     <div class="card-content">
-      <p class="card-genre">Victorian Gothic Mystery</p>
+      <span class="card-genre">Victorian Gothic Mystery</span>
       <h2 class="card-title">The Veil Murders</h2>
-      <p class="card-tagline">A serial killer in fog-choked Dunhallow — until Edith realizes there is no single killer at all.</p>
+      <p class="card-tagline">A serial killer in fog-choked Dunhallow — until Edith realises there is no single killer at all.</p>
     </div>
     <div class="card-arrow">↗</div>
     <div class="card-accent-line"></div>
   </a>
+
 </main>
 
 <footer>Game Design Documents &nbsp;·&nbsp; Original Worlds &nbsp;·&nbsp; All Rights Reserved</footer>
