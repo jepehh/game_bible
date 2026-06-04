@@ -729,6 +729,46 @@
   .hero-title    { animation: fadeUp 0.8s 0.25s both; }
   .hero-sub      { animation: fadeUp 0.6s 0.5s both; }
   .hero-tags     { animation: fadeUp 0.6s 0.65s both; }
+
+  /* ── MOBILE ── */
+  @media (max-width: 768px) {
+    /* pill back-link — easier to tap, visible over hero image */
+    .back-link {
+      top: 14px; left: 14px;
+      padding: 10px 16px;
+      background: rgba(10,6,3,0.6);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(200,136,42,0.22);
+    }
+    .hero-scroll-hint { display: none; }
+    .hero-ornament { margin-bottom: 14px; }
+    .section { margin-bottom: 60px; }
+    .section-label { margin-bottom: 20px; }
+    .divider-emblem { font-size: 1rem; }
+  }
+
+  @media (max-width: 480px) {
+    .hero-sub { font-size: 0.98rem; margin-bottom: 20px; }
+    .hero-tags { gap: 6px; }
+    .tag { font-size: 0.52rem; padding: 4px 10px; }
+    .highlight-box { padding: 18px 20px; font-size: 1.05rem; }
+    .restriction-list { padding: 22px 20px; }
+    .split-body { padding: 28px 22px; }
+    .faction-body { padding: 16px 18px; }
+    .quest-card { padding: 22px 22px; }
+    .diff-cell { padding: 22px 20px; }
+  }
+
+  /* touch active states */
+  @media (hover: none) {
+    .loc-card:active { background: var(--card-hover); }
+    .loc-card:active .loc-card-img { filter: brightness(0.7) saturate(0.9); transform: scale(1.03); }
+    .faction-card:active { background: var(--card-hover); }
+    .quest-card:active { background: var(--card-hover); }
+    .quest-card:active::before { height: 100%; }
+    .split:active .split-img { filter: brightness(0.75) saturate(0.9); }
+  }
 </style>
 </head>
 <body>

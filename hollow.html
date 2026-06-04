@@ -740,6 +740,48 @@
   .hero-eyebrow { animation: fadeUp 0.5s 0.1s both; }
   .hero-title   { animation: fadeUp 0.8s 0.2s both; }
   .hero-desc    { animation: fadeUp 0.5s 0.5s both; }
+
+  /* ── MOBILE ── */
+  @media (max-width: 768px) {
+    .back-link {
+      top: 14px; left: 14px;
+      padding: 10px 16px;
+      background: rgba(6,7,10,0.6);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(122,154,186,0.2);
+    }
+    .section { margin-bottom: 60px; }
+    .section-label { margin-bottom: 20px; }
+    .hero-rule { display: none; }
+  }
+
+  /* Hollow title is designed to be uncomfortably large —
+     on very small phones soften the clamp minimum so it doesn't overflow */
+  @media (max-width: 480px) {
+    .hero-title { font-size: clamp(3.8rem, 22vw, 6rem); letter-spacing: -0.03em; }
+    .hero-eyebrow { font-size: 0.54rem; letter-spacing: 0.2em; }
+    .hero-desc { font-size: 0.86rem; margin-top: 20px; }
+    .rena-body { padding: 28px 22px; gap: 18px; }
+    .signal-box { padding: 18px 20px; }
+    .restriction-list { padding: 22px 20px; }
+    .faction-card { padding: 20px 22px; }
+    .quest-card { padding: 22px 22px; }
+    .diff-cell { padding: 20px 18px; }
+    .log-key { min-width: 72px; }
+  }
+
+  /* touch active states */
+  @media (hover: none) {
+    .loc-card:active { background: var(--card-hover); }
+    .loc-card:active .loc-img { filter: brightness(0.55) saturate(0.6); transform: scale(1.03); }
+    .char-card:active { background: var(--card-hover); }
+    .char-card:active .char-img { filter: brightness(0.58) saturate(0.55); transform: scale(1.04); }
+    .faction-card:active { background: var(--card-hover); }
+    .faction-card:active::before { width: 2px; }
+    .quest-card:active { background: var(--card-hover); }
+    .rena-split:active .rena-img { filter: brightness(0.68) saturate(0.6); }
+  }
 </style>
 </head>
 <body>

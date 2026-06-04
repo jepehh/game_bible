@@ -295,6 +295,37 @@
   .game-card:nth-child(2)  { animation: fadeUp 0.65s 0.35s ease both; }
   .game-card:nth-child(3)  { animation: fadeUp 0.65s 0.50s ease both; }
   .game-card:nth-child(4)  { animation: fadeUp 0.65s 0.65s ease both; }
+
+  /* ── MOBILE ── */
+  @media (max-width: 700px) {
+    header { padding: 80px 24px 70px; }
+    main { padding: 48px 0 80px; }
+
+    /* portrait-ish cards — each one feels like a theatrical poster */
+    .game-card { aspect-ratio: unset; min-height: 360px; }
+
+    .card-content { padding: 22px 22px 28px; }
+    .card-tagline { max-width: none; font-size: 0.82rem; }
+
+    /* Hollow title is intentionally huge — rein it in slightly */
+    .card-horror .card-title { font-size: clamp(2.2rem, 12vw, 3.2rem); }
+  }
+
+  @media (max-width: 440px) {
+    header { padding: 56px 20px 52px; }
+    .game-card { min-height: 300px; }
+    .card-content { padding: 18px 18px 22px; }
+    .card-genre { font-size: 0.56rem; }
+  }
+
+  /* touch: :active substitutes for :hover */
+  @media (hover: none) {
+    .game-card:active .card-photo   { transform: scale(1.04); }
+    .game-card:active .card-genre   { opacity: 1; }
+    .game-card:active .card-tagline { color: rgba(232,228,220,0.82); }
+    .game-card:active .card-arrow   { opacity: 1; transform: translate(0,0); }
+    .game-card:active .card-accent-line { width: 100%; transition-duration: 0.15s; }
+  }
 </style>
 </head>
 <body>

@@ -758,6 +758,77 @@
   .hero-title    { animation: fadeUp 0.8s 0.25s both; }
   .hero-dateline { animation: fadeUp 0.5s 0.5s both; }
   .hero-deck     { animation: fadeUp 0.5s 0.65s both; }
+
+  /* ── MOBILE ── */
+  @media (max-width: 768px) {
+    .back-link {
+      top: 14px; left: 14px;
+      padding: 10px 16px;
+      background: rgba(7,5,3,0.6);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(200,146,42,0.22);
+    }
+    .masthead-rule { margin-bottom: 20px; }
+    .section { margin-bottom: 60px; }
+    .section-label { margin-bottom: 20px; }
+    .hero-rule-bottom { display: none; }
+  }
+
+  /* difficulty table: reformat as stacked blocks on small screens */
+  @media (max-width: 560px) {
+    .diff-table,
+    .diff-table thead,
+    .diff-table tbody,
+    .diff-table tr { display: block; width: 100%; }
+
+    .diff-table th  { display: none; }
+
+    .diff-table tr {
+      border: 1px solid var(--sepia-border);
+      margin-bottom: 8px;
+      background: var(--card);
+    }
+    .diff-table tr:last-child { margin-bottom: 0; }
+
+    .diff-table td {
+      display: block;
+      border-bottom: none;
+      padding: 10px 18px;
+      width: auto;
+    }
+    .diff-table td:first-child {
+      font-size: 0.85rem;
+      padding-bottom: 4px;
+      border-bottom: 1px solid var(--sepia-border);
+    }
+    .diff-table td:last-child { padding-top: 8px; font-style: italic; }
+  }
+
+  @media (max-width: 480px) {
+    .hero-dateline { font-size: 0.74rem; }
+    .hero-deck { font-size: 0.9rem; }
+    .masthead-text { font-size: 0.6rem; letter-spacing: 0.16em; }
+    .edith-body { padding: 28px 22px; gap: 18px; }
+    .case-file { padding: 20px 22px; }
+    .restriction-list { padding: 24px 20px; }
+    .faction-card { padding: 20px 22px; }
+    .quest-card { padding: 22px 22px; }
+    .file-key { min-width: 76px; }
+  }
+
+  /* touch active states */
+  @media (hover: none) {
+    .loc-card:active { background: var(--card-hover); }
+    .loc-card:active .loc-img { filter: brightness(0.6) saturate(0.8) sepia(0.1); transform: scale(1.03); }
+    .suspect-card:active { background: var(--card-hover); }
+    .suspect-card:active .suspect-img { filter: brightness(0.62) saturate(0.8) sepia(0.15); transform: scale(1.04); }
+    .faction-card:active { background: var(--card-hover); }
+    .faction-card:active::after { background: var(--sepia-border); }
+    .quest-card:active { background: var(--card-hover); }
+    .quest-card:active::before { width: 2px; }
+    .edith-split:active .edith-img { filter: brightness(0.72) saturate(0.85) sepia(0.1); }
+  }
 </style>
 </head>
 <body>
