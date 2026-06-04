@@ -5,18 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Quest Quality Survey — Game Bible</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=DM+Serif+Display:ital@0;1&family=Outfit:wght@200;400;500&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Share+Tech+Mono&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg: #0c0c0e;
+    --bg: #0a0a0c;
     --surface: #111114;
     --border: rgba(255,255,255,0.07);
     --text: #e8e4dc;
     --muted: rgba(232,228,220,0.45);
     --gold: #c9973a;
-    --rust: #a0412a;
   }
 
   body {
@@ -29,18 +28,21 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 40px 24px;
+    padding: 48px 20px;
     position: relative;
-    overflow: hidden;
+    overflow-x: hidden;
   }
 
+  /* four corners — one glow per game world */
   body::before {
     content: '';
     position: fixed;
     inset: 0;
     background:
-      radial-gradient(ellipse at 30% 20%, rgba(201,151,58,0.07) 0%, transparent 55%),
-      radial-gradient(ellipse at 70% 80%, rgba(90,110,78,0.05) 0%, transparent 55%);
+      radial-gradient(ellipse at 6%  8%,  rgba(200,65,20,0.08)   0%, transparent 44%),
+      radial-gradient(ellipse at 94% 8%,  rgba(0,195,160,0.07)   0%, transparent 44%),
+      radial-gradient(ellipse at 6%  94%, rgba(95,135,175,0.07)  0%, transparent 44%),
+      radial-gradient(ellipse at 94% 94%, rgba(185,135,30,0.07)  0%, transparent 44%);
     pointer-events: none;
   }
 
@@ -55,18 +57,33 @@
     opacity: 0.35;
   }
 
+  /* ── CARD ── */
   .card {
-    max-width: 580px;
+    max-width: 560px;
     width: 100%;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 56px 48px;
+    padding: 52px 48px;
     text-align: center;
     position: relative;
     z-index: 1;
-    box-shadow: 0 8px 48px rgba(0,0,0,0.4);
+    box-shadow: 0 12px 60px rgba(0,0,0,0.45);
     animation: fadeUp 0.7s ease both;
+  }
+
+  /* four-game top stripe */
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(to right,
+      #d04a18 0%,   #d04a18 25%,
+      #00c8a8 25%,  #00c8a8 50%,
+      #4a6a9a 50%,  #4a6a9a 75%,
+      #c89030 75%,  #c89030 100%
+    );
+    opacity: 0.72;
   }
 
   @keyframes fadeUp {
@@ -75,25 +92,25 @@
   }
 
   .rule {
-    width: 48px;
-    height: 1px;
+    width: 40px; height: 1px;
     background: var(--gold);
-    margin: 0 auto 24px;
-    opacity: 0.6;
+    margin: 0 auto 22px;
+    opacity: 0.55;
   }
 
   .eyebrow {
-    font-size: 0.62rem;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.6rem;
     letter-spacing: 0.28em;
     text-transform: uppercase;
     color: var(--muted);
     margin-bottom: 16px;
-    font-weight: 300;
+    font-weight: 400;
   }
 
   h1 {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(1.8rem, 5vw, 2.8rem);
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
     font-weight: 700;
     line-height: 1.1;
     margin-bottom: 8px;
@@ -103,162 +120,240 @@
   h1 em {
     font-style: italic;
     font-weight: 400;
-    color: rgba(232,228,220,0.55);
+    color: rgba(232,228,220,0.52);
     display: block;
-    font-size: 0.55em;
+    font-size: 0.54em;
     margin-top: 6px;
     letter-spacing: 0.02em;
   }
 
   .divider {
-    width: 100%;
-    height: 1px;
+    width: 100%; height: 1px;
     background: var(--border);
-    margin: 32px 0;
+    margin: 28px 0;
   }
 
   .meta-row {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 28px;
+    gap: 8px;
+    margin-bottom: 22px;
   }
 
   .meta-pill {
-    font-size: 0.65rem;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.62rem;
     padding: 4px 12px;
     border: 1px solid var(--border);
-    border-radius: 2px;
     color: var(--muted);
-    letter-spacing: 0.08em;
-    font-family: 'Source Serif 4', serif;
+    letter-spacing: 0.06em;
+    font-weight: 400;
   }
 
   .desc {
-    font-size: 0.92rem;
-    line-height: 1.8;
+    font-size: 0.9rem;
+    line-height: 1.82;
     color: var(--muted);
-    margin-bottom: 12px;
+    margin-bottom: 20px;
     font-style: italic;
   }
 
+  /* ── GENRE TAGS — each using the actual game's font & colour ── */
+  .genre-tags {
+    display: flex;
+    justify-content: center;
+    gap: 7px;
+    flex-wrap: wrap;
+    margin-bottom: 26px;
+  }
+
+  .genre-tag {
+    font-size: 0.56rem;
+    padding: 4px 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    background: transparent;
+    transition: opacity 0.2s;
+  }
+
+  .fantasy {
+    font-family: 'Cinzel', serif;
+    border: 1px solid rgba(210,70,24,0.5);
+    color: #e07028;
+    letter-spacing: 0.18em;
+  }
+  .scifi {
+    font-family: 'Share Tech Mono', monospace;
+    border: 1px solid rgba(0,200,168,0.45);
+    color: #00c8a8;
+    letter-spacing: 0.12em;
+  }
+  .horror {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    border: 1px solid rgba(100,138,178,0.4);
+    color: #7a9aba;
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    text-transform: none;
+  }
+  .mystery {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    border: 1px solid rgba(195,142,45,0.45);
+    color: #c89030;
+    letter-spacing: 0.1em;
+    text-transform: none;
+  }
+
+  /* ── STATS ── */
   .stats {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1px;
     background: var(--border);
     border: 1px solid var(--border);
-    border-radius: 3px;
-    margin: 28px 0;
+    margin: 24px 0 28px;
     overflow: hidden;
   }
 
   .stat {
-    background: rgba(255,255,255,0.02);
-    padding: 16px 12px;
+    background: var(--bg);
+    padding: 18px 12px;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 5px;
     align-items: center;
+    transition: background 0.2s;
   }
+
+  .stat:hover { background: rgba(255,255,255,0.025); }
 
   .stat-num {
     font-family: 'Playfair Display', serif;
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: var(--gold);
     line-height: 1;
   }
 
   .stat-label {
-    font-size: 0.62rem;
-    letter-spacing: 0.1em;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.58rem;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--muted);
+    font-weight: 400;
   }
 
+  /* ── PRIZE BOX ── */
   .prize-box {
-    background: rgba(201,151,58,0.06);
+    background: linear-gradient(to right, rgba(201,151,58,0.07), rgba(201,151,58,0.03));
     border: 1px solid rgba(201,151,58,0.2);
-    border-radius: 3px;
-    padding: 14px 20px;
+    border-left: 2px solid rgba(201,151,58,0.5);
+    padding: 14px 18px;
     margin-bottom: 28px;
-    font-size: 0.85rem;
-    color: rgba(232,228,220,0.7);
-    line-height: 1.6;
+    font-size: 0.84rem;
+    color: rgba(232,228,220,0.68);
+    line-height: 1.65;
+    text-align: left;
   }
 
-  .prize-box strong {
-    color: var(--gold);
-    font-style: normal;
-  }
+  .prize-box strong { color: var(--gold); font-style: normal; }
 
+  /* ── BUTTON ── */
   .start-btn {
-    display: inline-block;
+    display: block;
+    width: 100%;
     background: var(--text);
     color: var(--bg);
     text-decoration: none;
-    padding: 16px 48px;
+    padding: 17px 48px;
     font-family: 'Playfair Display', serif;
     font-size: 1rem;
     font-weight: 700;
     letter-spacing: 0.06em;
-    border-radius: 3px;
-    transition: all 0.2s;
-    width: 100%;
     text-align: center;
     cursor: pointer;
     border: none;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  }
+
+  /* rainbow shimmer under hover */
+  .start-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right,
+      rgba(210,70,18,0.14),
+      rgba(0,200,160,0.12),
+      rgba(100,140,178,0.12),
+      rgba(195,142,45,0.14)
+    );
+    opacity: 0;
+    transition: opacity 0.3s;
   }
 
   .start-btn:hover {
     background: var(--gold);
-    color: var(--bg);
+    color: #0a0a0c;
     transform: translateY(-2px);
-    box-shadow: 0 6px 24px rgba(201,151,58,0.25);
+    box-shadow: 0 8px 28px rgba(201,151,58,0.28);
   }
 
+  .start-btn:hover::after { opacity: 1; }
+
+  /* ── BACK LINK ── */
   .back-link {
-    margin-top: 20px;
-    font-size: 0.75rem;
+    margin-top: 18px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.72rem;
     color: var(--muted);
     text-decoration: none;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
     transition: color 0.2s;
     position: relative;
     z-index: 1;
+    padding: 10px 16px;
+    display: inline-block;
   }
 
   .back-link:hover { color: var(--text); }
 
-  .genre-tags {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-bottom: 28px;
+  /* ── MOBILE ── */
+  @media (max-width: 580px) {
+    body { padding: 40px 16px 52px; justify-content: flex-start; padding-top: 52px; }
+    .card { padding: 40px 26px 44px; }
+    .eyebrow { font-size: 0.55rem; letter-spacing: 0.2em; }
+    .desc { font-size: 0.86rem; }
+    .prize-box { font-size: 0.8rem; padding: 12px 16px; }
+    .meta-pill { font-size: 0.58rem; padding: 4px 10px; }
   }
 
-  .genre-tag {
-    font-size: 0.6rem;
-    padding: 3px 10px;
-    border-radius: 2px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    font-family: 'Playfair Display', serif;
-    font-weight: 600;
-    color: white;
+  @media (max-width: 400px) {
+    .card { padding: 32px 18px 36px; }
+    h1 { font-size: clamp(1.6rem, 8vw, 2rem); }
+    .genre-tag { font-size: 0.52rem; padding: 3px 9px; }
+    .stat-num { font-size: 1.3rem; }
+    .stats { margin: 18px 0 22px; }
+    .start-btn { font-size: 0.92rem; padding: 15px 24px; }
+    .divider { margin: 22px 0; }
   }
 
-  .fantasy  { background: #5a6e4e; }
-  .scifi    { background: #3a4a5c; }
-  .horror   { background: #6b2d2d; }
-  .mystery  { background: #4a3d5c; }
-
-  @media (max-width: 480px) {
-    .card { padding: 40px 24px; }
-    .stats { grid-template-columns: repeat(3, 1fr); }
+  /* touch active states */
+  @media (hover: none) {
+    .start-btn:active {
+      background: var(--gold);
+      color: #0a0a0c;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(201,151,58,0.25);
+    }
+    .start-btn:active::after { opacity: 1; }
+    .back-link:active { color: var(--text); }
+    .genre-tag:active { opacity: 0.7; }
   }
 </style>
 </head>
@@ -266,7 +361,7 @@
 
 <div class="card">
   <div class="rule"></div>
-  <p class="eyebrow">Research Survey &nbsp;·&nbsp; Bina Nusantara University &nbsp;·&nbsp; 2025</p>
+  <p class="eyebrow">Research Survey &nbsp;·&nbsp; Bina Nusantara University &nbsp;·&nbsp; 2026</p>
   <h1>Quest Quality<em>Evaluation Survey</em></h1>
 
   <div class="divider"></div>
@@ -281,7 +376,7 @@
   <div class="genre-tags">
     <span class="genre-tag fantasy">Fantasy</span>
     <span class="genre-tag scifi">Sci-Fi</span>
-    <span class="genre-tag horror">Horror</span>
+    <span class="genre-tag horror">Hollow</span>
     <span class="genre-tag mystery">Mystery</span>
   </div>
 
@@ -304,7 +399,7 @@
     🎉 &nbsp;Complete the survey and be entered into a raffle for a <strong>Rp200.000 e-wallet prize</strong>. Winner selected randomly after data collection ends.
   </div>
 
-  <a class="start-btn" href="https://script.google.com/macros/s/AKfycbzb2GqJg6lmUrBUwJD304Op5D6U8xDyhcqIHtRcV3bsjXD_qUkcYxJRm0Am5UUmyb2VbQ/exec" target="_blank" rel="noopener noreferrer">
+  <a class="start-btn" href="https://script.google.com/macros/s/AKfycbxqd5M9rgpPJANMTvzSHVtV8e2G2XX1XnuMgiTYDj3ExDKz9jLHl528psyNfOYqlKGT9g/exec" target="_blank" rel="noopener noreferrer">
     Begin Survey
   </a>
 </div>
